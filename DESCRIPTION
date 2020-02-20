@@ -21,3 +21,4 @@ Authors@R: c(person(given = "Felipe Antonio",
 Description: the denhotspots package calculate the gi and hi local spatial statistics for areal data.
 Encoding: UTF-8
 LazyData: true
+License: MIT + file LICENSE
