@@ -7,15 +7,15 @@
 
 ## **overview**
 
-**denhotspots** is a package to generate predictive maps of the number of eggs or adults in areas where it is not collected.The predictive maps are generated using geostatistical analysis in the [INLA](http://www.r-inla.org/) framework. 
+**denhotspots** . 
 
-  - **`gihi()`** generate the predictive map.
-  - **`bivariate_map()`** generates an entomological risk map or an egg density map.
-  - **`subset_den()`** It is a complementary function that helps in the creation of grid of the locality in the prediction stack in [INLA](http://www.r-inla.org/).
-  - **`data_geocoden()`** It is a complementary function that helps in the creation of mesh.
-  - **`geocoden()`** It is a complementary function that helps in the creation of mesh.
-  - **`save_geocoden()`** It is a complementary function that helps in the creation of mesh.
-  - **`point_to_polygons()`** It is a complementary function that helps in the creation of mesh.
+  - **`gihi()`** calculate gi and hi local spatial statistic.
+  - **`bivariate_map()`** generate a bivariate map.
+  - **`subset_den()`** is a function for subset de dengue dataset.
+  - **`data_geocoden()`** this function creates an address vector and replaces incorrect text.
+  - **`geocoden()`** this function geocodes the addresses of the sinave database using Geocoding API.
+  - **`save_geocoden()`** This function generates the RData file where it contains the geocoded data and the sinave dataset.
+  - **`point_to_polygons()`** this function counts how many events for spatial uni.
 
 ## Instalation
 
