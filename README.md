@@ -36,7 +36,26 @@ devtools::install_github("fdzul/denhotspots")
 
 ## usage example 1.
 ``` r
-
+library(dendata)
+library(magrittr)
+library(sf)
+y <- denhotspots::gihi(x = den_loc_mex %>% 
+                           dplyr::filter(loc == "Acapulco"),
+                        gi_hi = "gi_hi",
+                        id =  c("CVEGEO", "loc"),
+                        dis = "DENV",
+                        time = "year",
+                        alpha = 0.95)
+denhotspots::bivariate_map(w = y,
+                           x = hotspots_gi,
+                           y = hotspots_hi,
+                           pal = "DkBlue",
+                           dim = 2,
+                           style = "equal",
+                           size_axis = 10,
+                           x_leg = 0.1, 
+                           y_leg = 0.1,
+                           scale_leg = 1.2)
 ``` 
 
 ## usage example 2
