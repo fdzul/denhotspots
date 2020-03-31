@@ -78,6 +78,7 @@ denhotspots::bivariate_map(w = y,
   1) [denhotspots](https://github.com/fdzul/denhotspots). 
   2) [boldenr](https://github.com/fdzul/boldenr). 
   3) [dendata](https://github.com/fdzul/dendata).
+  4) [deneggs](https://github.com/fdzul/deneggs).
 
 * **Fabian Correa Morales**
 * **Gonzalo Vazquez-Prokopec**
