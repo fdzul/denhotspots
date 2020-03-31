@@ -35,7 +35,7 @@ Mac
 devtools::install_github("fdzul/denhotspots")
 ``` 
 
-Linuz
+Linux
 ``` r
 # install.packages("remotes")
 remotes::install_github("fdzul/denhotspots")
