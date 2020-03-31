@@ -29,10 +29,18 @@ install.packages("denhotspots")
 To get a bug fix, or use a feature from the development version, you can
 install denhotspots from GitHub.
 
+Mac
 ``` r
 # install.packages("devtools")
 devtools::install_github("fdzul/denhotspots")
 ``` 
+
+Linuz
+``` r
+# install.packages("remotes")
+remotes::install_github("fdzul/denhotspots")
+``` 
+
 
 ## usage example 1.
 ``` r
