@@ -20,7 +20,7 @@
 ## Instalation
 
 ``` r
-# The easiest way to get denhotspots is to instal:
+# The easiest way to get denhotspots is to install:
 install.packages("denhotspots")
 ```
 
