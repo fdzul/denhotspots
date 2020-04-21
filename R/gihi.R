@@ -27,8 +27,8 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
         tidyr::pivot_longer(names_to = time,
                             values_to = "n",
                             cols = -id) %>%
-        tidyr::separate(col = time, into = c("etv", time)) %>%
-        dplyr::filter(stringr::str_detect(etv, dis)) %>%
+        tidyr::separate(col = time, into = c("dis", time)) %>%
+        dplyr::filter(stringr::str_detect(dis, dis)) %>%
         dplyr::group_by(!! rlang::sym(time)) %>%
         tidyr::nest()
 
@@ -95,7 +95,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::mutate(getis = purrr::map(data, getis_ord)) %>%
             tidyr::unnest(cols = c(data, getis)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("gi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("gi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = y)
@@ -105,7 +105,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(-getis) %>%
             tidyr::unnest(cols = c(data, hotspots_gi)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("hotspot.gi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("hotspot.gi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = hotspots_gi) %>%
@@ -127,7 +127,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(data, hi) %>%
             tidyr::unnest(cols = c(data, hi)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("Hi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("Hi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Hi")
@@ -137,7 +137,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(data,p_value) %>%
             tidyr::unnest(cols = c(data, p_value)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("p_val", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("p_val", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Pr()")
@@ -147,7 +147,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(data, hotspothi) %>%
             tidyr::unnest(cols = c(data, hotspothi)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("hotspot.hi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("hotspot.hi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "hotspot.hi")
@@ -172,7 +172,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::mutate(getis = purrr::map(data, getis_ord)) %>%
             tidyr::unnest(cols = c(data, getis)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("gi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("gi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = y)
@@ -182,7 +182,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(-getis) %>%
             tidyr::unnest(cols = c(data, hotspots_gi)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("hotspot.gi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("hotspot.gi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = hotspots_gi) %>%
@@ -210,7 +210,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(data, hi) %>%
             tidyr::unnest(cols = c(data, hi)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("Hi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("Hi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Hi")
@@ -220,7 +220,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(data,p_value) %>%
             tidyr::unnest(cols = c(data, p_value)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("p_val", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("p_val", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Pr()")
@@ -230,7 +230,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
             dplyr::select(data, hotspothi) %>%
             tidyr::unnest(cols = c(data, hotspothi)) %>%
             as.data.frame() %>%
-            dplyr::mutate(year = paste("hotspot.hi", year, sep = "_")) %>%
+            dplyr::mutate(time = paste("hotspot.hi", !! rlang::sym(time), sep = "_")) %>%
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "hotspot.hi")
