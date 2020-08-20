@@ -57,6 +57,7 @@ subset_den <- function(x = NULL, path = NULL, edo, mun, loc, sinave_new, age_gro
                             encoding = "Latin-1")
         names(x) <- names(w)
         x <- rbind(x, w) %>%
+        dplyr::filter(DES_EDO_RES %in% c(edo)) %>%
             dplyr::filter(DES_MPO_RES %in% c(mun)) %>%
             dplyr::filter(DES_LOC_RES %in% c(loc)) %>%
             dplyr::filter(DES_DIAG_FINAL %in% c("DENGUE GRAVE",

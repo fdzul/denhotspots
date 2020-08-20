@@ -81,9 +81,6 @@ denhotspots::bivariate_map(w = y,
   4) [deneggs](https://github.com/fdzul/deneggs).
 
 * **Fabian Correa Morales**
-* **Gonzalo Vazquez-Prokopec**
-
-
 
 
 See also the list of [contributors](https://github.com/fdzul/denhotspots/contributors) who participated in this project.
