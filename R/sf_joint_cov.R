@@ -1,5 +1,5 @@
 #' sf_joint_cov
-#' this function apply the dplyr::left_joint between sf and covid data of México
+#' this function apply the dplyr::left_join between sf and covid data of México
 #'
 #' @param path_dat is the directory of the covid data.
 #' @param path_sf  is the directory of the municipality shapefile of Mexico.
@@ -10,7 +10,7 @@
 #'
 #' @note the dataset of SARS-COV2 of Mexico is downloaded homepage of DGE \url{https://www.gob.mx/salud/documentos/datos-abiertos-152127?idiom=es} and adapted to work with the sinave \url{http://www.sinave.gob.mx/} database.
 #'
-#' @details The function use the \link[dplyr]{left_joint} of dplyr.
+#' @details The function use the \link[dplyr]{left_join} of dplyr.
 #'
 #' @examples
 sf_joint_cov <- function(path_dat, path_sf){
