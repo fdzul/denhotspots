@@ -13,7 +13,7 @@
 #' @details The function use the \link[dplyr]{left_joint} of dplyr.
 #'
 #' @examples
-joint_data_sf <- function(path_dat, path_sf){
+sf_joint_cov <- function(path_dat, path_sf){
     # Step 1. load the dataset ####
     covid <- data.table::fread(path_dat,
                                header = TRUE)
