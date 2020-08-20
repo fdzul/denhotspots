@@ -4,8 +4,7 @@
 \alias{subset_den}
 \title{subset_den}
 \usage{
-subset_den(x = NULL, path = NULL, edo, mun, loc, sinave_new, age_group,
-  name)
+subset_den(x = NULL, path = NULL, edo, mun, loc, sinave_new, age_group, name)
 }
 \arguments{
 \item{x}{is the 2008-2015 dengue dataset. Is NULL for 2016-2019 dengue dataset.}
