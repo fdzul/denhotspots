@@ -21,8 +21,16 @@
 #' Ord JK,  Getis A. 2012. Local spatial heteroscedasticity (LOSH), The Annals of Regional Science, 48 (2), 529–539.
 #' Bivand RS, Wong DWS. 2018. Comparing implementations of global and local indicators of spatial association. TEST, 27(3), 716–748.
 gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
+
+    #
+    colselec <- row.names(data.frame(n = colSums(x %>%
+                                                     sf::st_drop_geometry() %>%
+                                                     dplyr::select(-id))) %>%
+                              dplyr::filter(n > 0))
+
     # nested dataset ####
     w <- x %>%
+        dplyr::select(id, colselec, geometry) %>%
         sf::st_drop_geometry() %>%
         tidyr::pivot_longer(names_to = time,
                             values_to = "n",
