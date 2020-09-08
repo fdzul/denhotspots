@@ -35,7 +35,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
         tidyr::pivot_longer(names_to = time,
                             values_to = "n",
                             cols = -id) %>%
-        tidyr::separate(col = time, into = c("dis", time)) %>%
+        tidyr::separate(col = time, into = c("dis", time), sep = "_") %>%
         dplyr::filter(stringr::str_detect(dis, dis)) %>%
         dplyr::group_by(!! rlang::sym(time)) %>%
         tidyr::nest()
