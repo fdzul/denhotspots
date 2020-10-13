@@ -22,7 +22,7 @@ sf_joint_cov <- function(path_dat, path_sf){
 
     # Step 2. count the n cases by municipality and non tidy dataset ####
     x <- covid %>%
-        dplyr::filter(RESULTADO == 1) %>%
+        dplyr::filter(RESULTADO_LAB == 1) %>%
         dplyr::mutate(date = lubridate::ymd(FECHA_SINTOMAS),
                       week = lubridate::week(date)) %>%
         dplyr::group_by(week, ENTIDAD_RES, MUNICIPIO_RES) %>%
