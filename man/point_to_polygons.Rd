@@ -7,9 +7,9 @@
 point_to_polygons(x, y, ids, time, coords, crs, dis)
 }
 \arguments{
-\item{x}{is the sf areal data.}
+\item{x}{is the point pattern data with the coordinate.}
 
-\item{y}{is the point pattern data with the coordinate.}
+\item{y}{is the sf areal data.}
 
 \item{ids}{is the unique o uniques identifiers of each spatial unit.}
 
