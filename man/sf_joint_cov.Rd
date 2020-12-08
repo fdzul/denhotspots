@@ -3,7 +3,7 @@
 \name{sf_joint_cov}
 \alias{sf_joint_cov}
 \title{sf_joint_cov
-this function apply the dplyr::left_joint between sf and covid data of México}
+this function apply the dplyr::left_join between sf and covid data of México}
 \usage{
 sf_joint_cov(path_dat, path_sf)
 }
@@ -17,10 +17,10 @@ a sf object with a dengue cases accumulated by municipality.
 }
 \description{
 sf_joint_cov
-this function apply the dplyr::left_joint between sf and covid data of México
+this function apply the dplyr::left_join between sf and covid data of México
 }
 \details{
-The function use the \link[dplyr]{left_joint} of dplyr.
+The function use the \link[dplyr]{left_join} of dplyr.
 }
 \note{
 the dataset of SARS-COV2 of Mexico is downloaded homepage of DGE \url{https://www.gob.mx/salud/documentos/datos-abiertos-152127?idiom=es} and adapted to work with the sinave \url{http://www.sinave.gob.mx/} database.
