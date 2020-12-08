@@ -2,8 +2,8 @@
 #'
 #' this function counts how many events for spatial unit
 #'
-#' @param x is the sf areal data.
-#' @param y is the point pattern data with the coordinate.
+#' @param y is the sf areal data.
+#' @param x is the point pattern data with the coordinate.
 #' @param ids is the unique o uniques identifiers of each spatial unit.
 #' @param time is the temporal resolution of datasets.
 #' @param coords is the coordinates of geocoded dataset.
