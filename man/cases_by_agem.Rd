@@ -12,11 +12,11 @@ cases_by_agem(path, disease)
 \item{disease}{is a string for define the vector borne disease. The option are "Paludismo", "Dengue" & "covid.}
 }
 \value{
-a sf object. The municipality con de cases by year.
+a sf object. The municipality with the dengue cases by year.
 }
 \description{
 this function left joint sf AGEM and the cases by municipality.
 }
 \examples{
-1+1 
+1+1
 }
