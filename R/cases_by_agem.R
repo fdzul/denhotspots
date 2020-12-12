@@ -44,7 +44,7 @@ cases_by_agem <- function(path, disease){
     # Step 1.2. read the files with datatable ####
     if(disease == "covid"){
         y <- data.table::fread(path, header = TRUE) %>%
-            dplyr::filter(RESULTADO_LAB == 1) %>%
+            dplyr::filter(CLASIFICACION_FINAL %in% c(1:3)) %>%
             dplyr::mutate(date = lubridate::ymd(FECHA_SINTOMAS),
                           week = lubridate::week(date)) %>%
             dplyr::group_by(week, ENTIDAD_RES, MUNICIPIO_RES) %>%
