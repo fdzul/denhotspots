@@ -80,6 +80,8 @@ denhotspots::bivariate_map(w = y,
   2) [boldenr](https://github.com/fdzul/boldenr). 
   3) [dendata](https://github.com/fdzul/dendata).
   4) [deneggs](https://github.com/fdzul/deneggs).
+  5) [rgeomex](https://github.com/fdzul/rgeomex).
+  6) [covid1omx](https://github.com/fdzul/covid19mx).
 
 * **Fabian Correa Morales**
 
