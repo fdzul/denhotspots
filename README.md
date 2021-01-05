@@ -1,6 +1,7 @@
 # **denhotspots**
 
 [![Build Status](https://travis-ci.org/pages-themes/cayman.svg?branch=master)](https://travis-ci.org/pages-themes/cayman) [![Gem Version](https://badge.fury.io/rb/jekyll-theme-cayman.svg)](https://badge.fury.io/rb/jekyll-theme-cayman)
+![GitHub all releases](https://img.shields.io/github/downloads/fdzul/denhotspots/total?style=social)
 
 **denhotspots is a package developed in the department of prevention and control of diseases transmitted by vector of the [Secretary of Health of Veracruz](https://www.ssaver.gob.mx/) and with colaboration of the federal level**
 
@@ -79,6 +80,8 @@ denhotspots::bivariate_map(w = y,
   2) [boldenr](https://github.com/fdzul/boldenr). 
   3) [dendata](https://github.com/fdzul/dendata).
   4) [deneggs](https://github.com/fdzul/deneggs).
+  5) [rgeomex](https://github.com/fdzul/rgeomex).
+  6) [covid19mx](https://github.com/fdzul/covid19mx).
 
 * **Fabian Correa Morales**
 
