@@ -159,9 +159,9 @@ power_law_plot <- function(x){
                           label= "Power Law 90:10",
                           color = "black",
                           size = 2.5) +
-        ggplot2::theme(strip.text = element_text(face = "bold",
+        ggplot2::theme(strip.text =  ggplot2::element_text(face = "bold",
                                                  size = 10)) +
-        ggplot2::theme(axis.text = element_text(face = "bold",
+        ggplot2::theme(axis.text =  ggplot2::element_text(face = "bold",
                                                 size = 8)) +
         ggplot2::annotate(geom = "point",
                           y = 50,
