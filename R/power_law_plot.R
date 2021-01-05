@@ -14,7 +14,7 @@ power_law_plot <- function(x){
 
     if(length(unique(x$loc)) == 1){
         p <- ggplot2::ggplot(data = x,
-                             aes(x = id_perc_cum,
+                             ggplot2::aes(x = id_perc_cum,
                                  y = perc_cumsum_n,
                                  col = as.factor(hotspots_gi))) +
             ggplot2::geom_line( size = 1.5)
