@@ -22,7 +22,6 @@ satscanR <- function(cas_file, geo_file,
                      spatial_window,
                      temporal_window){
     # step 1. reset the option ####
-    #library(rsatscan)
     invisible(rsatscan::ss.options(reset = TRUE))
 
     #  Step 2. define the input windows ####
