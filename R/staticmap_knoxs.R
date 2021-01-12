@@ -2,10 +2,10 @@
 #'
 #' This function generate the space-time link map.
 #'
-#' @param locality
-#' @param cve_geo
-#' @param path_data
-#' @param path_knoxs
+#' @param locality is the locality target.
+#' @param cve_geo is the id of state.
+#' @param path_data is the directory of geocoded dengue cases dataset.
+#' @param path_knoxs is the output of the space-time analysis (Knoxs method) with ClusterSeer.
 #' @param pal is the palette.
 #' @param option is the palette option.
 #' @param name is the palette name. the option and name are very similar, some package use name (ej. rcartocolor::carto_pal) and other option (ex. viridis:viridis).
@@ -18,10 +18,11 @@
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}.
 #'
 #' @return a ggplot map.
-#'
+#' @details The staticmap_knox implement the space-time link map  with Knoxs method in [ClusterSeer](https://www.biomedware.com/software/clusterseer/).
 #' @export
+
 #'
-#' @examples
+#' @examples 1+1
 staticmap_knoxs <- function(locality, cve_geo, path_data, path_knoxs,
                             pal, option = NULL, name = NULL,
                             pal_name, breaks, dir_pal = NULL,
