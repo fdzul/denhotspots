@@ -20,6 +20,14 @@ staticmap_knoxs(
 )
 }
 \arguments{
+\item{locality}{is the locality target.}
+
+\item{cve_geo}{is the id of state.}
+
+\item{path_data}{is the directory of geocoded dengue cases dataset.}
+
+\item{path_knoxs}{is the output of the space-time analysis (Knoxs method) with ClusterSeer.}
+
 \item{pal}{is the palette.}
 
 \item{option}{is the palette option.}
@@ -41,6 +49,12 @@ a ggplot map.
 }
 \description{
 This function generate the space-time link map.
+}
+\details{
+The staticmap_knox implement the space-time link map  with Knoxs method in [ClusterSeer](https://www.biomedware.com/software/clusterseer/).
+}
+\examples{
+1+1
 }
 \author{
 Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}.
