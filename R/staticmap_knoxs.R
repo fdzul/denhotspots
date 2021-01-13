@@ -34,11 +34,11 @@ staticmap_knoxs <- function(locality, cve_geo, path_data, path_knoxs,
 
     # Step 2. load the dengue cases ####
 
-    z <- sf::st_read(path_data)
+    z <- sf::st_read(path_data, quiet = TRUE)
 
 
     # Step 3. load the Space-Time link ####
-    x <- sf::st_read(path_knoxs) %>%
+    x <- sf::st_read(path_knoxs, quiet = TRUE) %>%
         sf::st_set_crs(value = 4326)
 
 
