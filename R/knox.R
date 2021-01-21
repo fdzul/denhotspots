@@ -93,7 +93,7 @@ knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
             sf::st_combine(c(w,z)) %>%
                 sf::st_cast("LINESTRING") %>%
                 sf::st_sfc() %>%
-                sf::st_as_sf(crs = 4486)
+                sf::st_as_sf(crs = crs)
         }
 
         ###
