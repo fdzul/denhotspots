@@ -115,6 +115,7 @@ knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
     multi_return <- function() {
         my_list <- list("knox" = knox,
                         "st_link" = st_link,
+                        "x" = x,
                         "space_time_link" = space_time_link)
         return(my_list)
     }
