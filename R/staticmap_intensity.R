@@ -42,7 +42,8 @@ staticmap_intensity <- function(x, pal, option = NULL, name = NULL,
                                                            to = max(x$intensity_gi),
                                                            by = breaks),
                                               guide = "legend") +
-                ggplot2::theme(legend.position = c(x_leg, y_leg))
+                ggplot2::theme(legend.position = c(x_leg, y_leg)) +
+                ggplot2::guides(fill =  ggplot2::guide_legend(nrow = 1))
         } else{
             ggplot2::ggplot()+
                 ggplot2::geom_sf(data = x,
@@ -62,7 +63,8 @@ staticmap_intensity <- function(x, pal, option = NULL, name = NULL,
                                                            to = max(x$intensity_gi),
                                                            by = breaks),
                                               guide = "legend") +
-                ggplot2::theme(legend.position = c(x_leg, y_leg))
+                ggplot2::theme(legend.position = c(x_leg, y_leg)) +
+                ggplot2::guides(fill =  ggplot2::guide_legend(nrow = 1))
         }
     } else {
 
