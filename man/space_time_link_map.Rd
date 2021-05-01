@@ -7,11 +7,22 @@
 space_time_link_map(x, locality, cve_edo, maptype, facetmap = NULL)
 }
 \arguments{
-\item{facetmap}{}
+\item{x}{is the result of knox test.}
+
+\item{locality}{is the locality target.}
+
+\item{cve_edo}{is the id of state.}
+
+\item{maptype}{is the map type, the values are staticmap & interactive_map.}
+
+\item{facetmap}{is a logical value for facet, if true the map is facet, else is not facet.}
 }
 \value{
 a ggmap
 }
 \description{
 The purpose of this function is to visualize the transmission chains resulting from the knox test.
+}
+\author{
+
 }

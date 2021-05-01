@@ -2,15 +2,15 @@
 #'
 #' The purpose of this function is to visualize the transmission chains resulting from the knox test.
 #'
-#' @param x
-#' @param locality
-#' @param cve_edo
-#' @param maptype
-#' @param facetmap
+#' @param x is the result of knox test.
+#' @param locality is the locality target.
+#' @param cve_edo is the id of state.
+#' @param maptype is the map type, the values are staticmap & interactive_map.
+#' @param facetmap is a logical value for facet, if true the map is facet, else is not facet.
 #'
 #' @return a ggmap
 #' @export
-#'
+#' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmai
 #' @examples
 space_time_link_map <- function(x,
                                 locality,
