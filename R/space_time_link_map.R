@@ -10,7 +10,7 @@
 #'
 #' @return a ggmap
 #' @export
-#' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmai
+#' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
 #' @examples
 space_time_link_map <- function(x,
                                 locality,
