@@ -28,7 +28,7 @@ power_law_plot <- function(x){
     }
 
     p +
-        ggplot2::geom_line(data = power_laws,
+        ggplot2::geom_line(data = denhotspots::power_laws,
                            ggplot2::aes(x = x,
                                         y = y,
                                         linetype = power_law,
