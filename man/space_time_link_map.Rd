@@ -24,5 +24,5 @@ a ggmap
 The purpose of this function is to visualize the transmission chains resulting from the knox test.
 }
 \author{
-
+Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
 }
