@@ -8,6 +8,7 @@
 #' @param temporal_window is the temporal window. The time resolution is in days.
 #' @param start_date is the earliest date to be included in the study period. Is calculated with min(x_cas$date).
 #' @param end_date is the latest date to be included in the study period. Is calculated with max(x_cas$date).
+#' @param path_satscan is the path of directory of SatScan installation.
 #'
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}.
 #'
@@ -74,5 +75,5 @@ satscanR <- function(cas_file, geo_file,
     # Step 4. run space-tempo analysis ####
     rsatscan::satscan(prmlocation = td,
                       prmfilename = "x",
-                      sslocation = "C:/Program Files (x86)/SaTScan")
+                      sslocation = path_satscan)
 }
