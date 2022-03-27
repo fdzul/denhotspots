@@ -10,7 +10,9 @@ satscanR(
   start_date,
   end_date,
   spatial_window,
-  temporal_window
+  temporal_window,
+  ssbatchfilename = "SaTScanBatch",
+  path_satscan
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ satscanR(
 \item{spatial_window}{is the spatial window. The spatial resolution is in km.}
 
 \item{temporal_window}{is the temporal window. The time resolution is in days.}
+
+\item{ssbatchfilename}{is the name of the file containing the SaTScan executable.}
+
+\item{path_satscan}{is the path of directory of SatScan installation.}
 }
 \value{
 a list with eight object (main, col, rr, gis, llr, sci, shapeclust, prm)
