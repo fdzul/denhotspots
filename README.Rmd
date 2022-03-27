@@ -64,3 +64,40 @@ plot(pressure)
 ```
 
 In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+
+## Authors
+
+* **Felipe Antonio Dzul Manzanilla** -**https://github.com/fdzul** - Packages developed in github:
+
+  1) [boldenr](https://github.com/fdzul/boldenr). 
+  2) [dendata](https://github.com/fdzul/dendata).
+  3) [deneggs](https://github.com/fdzul/deneggs).
+  4) [rgeomex](https://github.com/fdzul/rgeomex).
+  5) [covid19mx](https://github.com/fdzul/covid19mx).
+
+* **Fabian Correa Morales** -
+
+See also the list of [contributors](https://github.com/fdzul/deneggs/contributors) who participated in this project.
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+
+## Inspiration
+
+The package was inspired by the need to contribute to generate health diagnoses at the state, municipality and local level.
+
+## Getting help
+
+If you encounter a clear bug, please file a minimal reproducible example
+on [github](https://github.com/fdzul/denhotspots/issues). For questions
+and other discussion, please feel free to contact me (felipe.dzul.m@gmail.com)
+
+-----
+
+Please note that this project is released with a [Contributor Code of
+Conduct](https://dplyr.tidyverse.org/CODE_OF_CONDUCT). By participating
+in this project you agree to abide by its terms.
+
