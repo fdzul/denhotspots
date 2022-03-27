@@ -9,6 +9,7 @@
 #' @param start_date is the earliest date to be included in the study period. Is calculated with min(x_cas$date).
 #' @param end_date is the latest date to be included in the study period. Is calculated with max(x_cas$date).
 #' @param path_satscan is the path of directory of SatScan installation.
+#' @param ssbatchfilename is the name of the file containing the SaTScan executable.
 #'
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}.
 #'
@@ -22,6 +23,7 @@ satscanR <- function(cas_file, geo_file,
                      start_date, end_date,
                      spatial_window,
                      temporal_window,
+                     ssbatchfilename = "SaTScanBatch",
                      path_satscan){
     # step 1. reset the option ####
     invisible(rsatscan::ss.options(reset = TRUE))
@@ -76,5 +78,6 @@ satscanR <- function(cas_file, geo_file,
     # Step 4. run space-tempo analysis ####
     rsatscan::satscan(prmlocation = td,
                       prmfilename = "x",
+                      ssbatchfilename = ssbatchfilename,
                       sslocation = path_satscan)
 }
