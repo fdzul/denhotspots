@@ -21,7 +21,8 @@
 satscanR <- function(cas_file, geo_file,
                      start_date, end_date,
                      spatial_window,
-                     temporal_window){
+                     temporal_window,
+                     path_satscan){
     # step 1. reset the option ####
     invisible(rsatscan::ss.options(reset = TRUE))
 
