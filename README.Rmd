@@ -69,7 +69,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Inspiration
 
-The package was inspired by the need to contribute to generate health diagnoses at the state, municipality and local level.
+The package was inspired by the need to contribute to public policies and decision-making of the Program for the Prevention and Control of Arboviruses in Mexico, specifically in the analysis spatial of dengue (cases and abundance of mosquitoes).
 
 ## Getting help
 
