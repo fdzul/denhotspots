@@ -23,21 +23,21 @@
 gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
 
     #
-    colselec <- row.names(data.frame(n = colSums(x %>%
-                                                     sf::st_drop_geometry() %>%
-                                                     dplyr::select(-id))) %>%
+    colselec <- row.names(data.frame(n = colSums(x |>
+                                                     sf::st_drop_geometry() |>
+                                                     dplyr::select(-id))) |>
                               dplyr::filter(n > 0))
 
     # nested dataset ####
-    w <- x %>%
-        dplyr::select(id, colselec, geometry) %>%
-        sf::st_drop_geometry() %>%
+    w <- x |>
+        dplyr::select(id, colselec, geometry) |>
+        sf::st_drop_geometry() |>
         tidyr::pivot_longer(names_to = time,
                             values_to = "n",
-                            cols = -id) %>%
-        tidyr::separate(col = time, into = c("dis", time), sep = "_") %>%
-        dplyr::filter(stringr::str_detect(dis, dis)) %>%
-        dplyr::group_by(!! rlang::sym(time)) %>%
+                            cols = -id) |>
+        tidyr::separate(col = time, into = c("dis", time), sep = "_") |>
+        dplyr::filter(stringr::str_detect(dis, dis)) |>
+        dplyr::group_by(!! rlang::sym(time)) |>
         tidyr::nest()
 
     # Convert the sf object to sp object and ####
@@ -85,171 +85,171 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
     }
     extract_losh <- function(x, hi){
         if(hi == TRUE){
-            x %>% dplyr::select(1)
+            x |>  dplyr::select(1)
         } else {
-            x %>% dplyr::select(7)
+            x |>  dplyr::select(7)
         }
     }
     hotspot_hi <- function(x){
-        y <- x %>% dplyr::mutate(hotspot.hi = ifelse(`Pr()` < 0.05,
+        y <- x |>  dplyr::mutate(hotspot.hi = ifelse(`Pr()` < 0.05,
                                                      1,
                                                      0))
-        y %>% dplyr::select(hotspot.hi)
+        y |>  dplyr::select(hotspot.hi)
     }
 
     if (gi_hi == "gi_hi"){
         # apply the functions for estimate gi ####
-        gi <- w %>%
-            dplyr::mutate(getis = purrr::map(data, getis_ord)) %>%
-            tidyr::unnest(cols = c(data, getis)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("gi", !! rlang::sym(time), sep = "_")) %>%
+        gi <- w |>
+            dplyr::mutate(getis = purrr::map(data, getis_ord)) |>
+            tidyr::unnest(cols = c(data, getis)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("gi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = y)
-        hot_gi <- w %>%
-            dplyr::mutate(getis = purrr::map(data, getis_ord)) %>%
-            dplyr::mutate(hotspots_gi = purrr::map(getis, hotspots_gi)) %>%
-            dplyr::select(-getis) %>%
-            tidyr::unnest(cols = c(data, hotspots_gi)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("hotspot.gi", !! rlang::sym(time), sep = "_")) %>%
+        hot_gi <- w |>
+            dplyr::mutate(getis = purrr::map(data, getis_ord)) |>
+            dplyr::mutate(hotspots_gi = purrr::map(getis, hotspots_gi)) |>
+            dplyr::select(-getis) |>
+            tidyr::unnest(cols = c(data, hotspots_gi)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("hotspot.gi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
-                               values_from = hotspots_gi) %>%
+                               values_from = hotspots_gi) |>
             as.data.frame()
 
-        hot_gi$intensity_gi <- rowSums(hot_gi %>% dplyr::select(-id))
+        hot_gi$intensity_gi <- rowSums(hot_gi |>  dplyr::select(-id))
         hot_gi$hotspots_gi <- ifelse(hot_gi$intensity_gi > 0,1,0)
 
 
         # apply the functions for estimate hi ####
-        losh.cs <- w %>%
-            dplyr::mutate(losh_cs = purrr::map(data, losh_cs)) %>%
-            dplyr::mutate(hi = purrr::map(losh_cs, extract_losh, hi = TRUE)) %>%
-            dplyr::mutate(p_value = purrr::map(losh_cs, extract_losh, hi = FALSE)) %>%
+        losh.cs <- w |>
+            dplyr::mutate(losh_cs = purrr::map(data, losh_cs)) |>
+            dplyr::mutate(hi = purrr::map(losh_cs, extract_losh, hi = TRUE)) |>
+            dplyr::mutate(p_value = purrr::map(losh_cs, extract_losh, hi = FALSE)) |>
             dplyr::mutate(hotspothi = purrr::map(p_value, hotspot_hi))
 
         # extract de loss values, column bind ####
-        hi <- losh.cs %>%
-            dplyr::select(data, hi) %>%
-            tidyr::unnest(cols = c(data, hi)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("Hi", !! rlang::sym(time), sep = "_")) %>%
+        hi <- losh.cs |>
+            dplyr::select(data, hi) |>
+            tidyr::unnest(cols = c(data, hi)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("Hi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Hi")
 
         # extract the pa values of loss ####
-        p_values <- losh.cs %>%
-            dplyr::select(data,p_value) %>%
-            tidyr::unnest(cols = c(data, p_value)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("p_val", !! rlang::sym(time), sep = "_")) %>%
+        p_values <- losh.cs |>
+            dplyr::select(data,p_value) |>
+            tidyr::unnest(cols = c(data, p_value)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("p_val", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Pr()")
 
         # define the hotspots ####
-        hot_hi <- losh.cs %>%
-            dplyr::select(data, hotspothi) %>%
-            tidyr::unnest(cols = c(data, hotspothi)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("hotspot.hi", !! rlang::sym(time), sep = "_")) %>%
+        hot_hi <- losh.cs |>
+            dplyr::select(data, hotspothi) |>
+            tidyr::unnest(cols = c(data, hotspothi)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("hotspot.hi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "hotspot.hi")
 
-        hot_hi$intensity_hi <- rowSums(hot_hi %>% dplyr::select(-id))
+        hot_hi$intensity_hi <- rowSums(hot_hi |>  dplyr::select(-id))
         hot_hi$hotspots_hi <- ifelse(hot_hi$intensity_hi > 0,1,0)
 
         # we joint the sf object with the dataframe of hotspot of gi and hi ####
         sf:::cbind.sf(x,
-                      gi %>% dplyr::select(-id),
-                      hot_gi %>% dplyr::select(-id),
-                      hi %>% dplyr::select(-id),
-                      p_values %>% dplyr::select(-id),
-                      hot_hi %>% dplyr::select(-id))[, c(id, "intensity_gi", "hotspots_gi",
+                      gi |>  dplyr::select(-id),
+                      hot_gi |>  dplyr::select(-id),
+                      hi |>  dplyr::select(-id),
+                      p_values |>  dplyr::select(-id),
+                      hot_hi |>  dplyr::select(-id))[, c(id, "intensity_gi", "hotspots_gi",
                                                          "intensity_hi", "hotspots_hi")]
 
 
     } else if(gi_hi == "gi"){
 
         # apply the functions for estimate gi ####
-        gi <- w %>%
-            dplyr::mutate(getis = purrr::map(data, getis_ord)) %>%
-            tidyr::unnest(cols = c(data, getis)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("gi", !! rlang::sym(time), sep = "_")) %>%
+        gi <- w |>
+            dplyr::mutate(getis = purrr::map(data, getis_ord)) |>
+            tidyr::unnest(cols = c(data, getis)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("gi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = y)
-        hot_gi <- w %>%
-            dplyr::mutate(getis = purrr::map(data, getis_ord)) %>%
-            dplyr::mutate(hotspots_gi = purrr::map(getis, hotspots_gi)) %>%
-            dplyr::select(-getis) %>%
-            tidyr::unnest(cols = c(data, hotspots_gi)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("hotspot.gi", !! rlang::sym(time), sep = "_")) %>%
+        hot_gi <- w |>
+            dplyr::mutate(getis = purrr::map(data, getis_ord)) |>
+            dplyr::mutate(hotspots_gi = purrr::map(getis, hotspots_gi)) |>
+            dplyr::select(-getis) |>
+            tidyr::unnest(cols = c(data, hotspots_gi)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("hotspot.gi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
-                               values_from = hotspots_gi) %>%
+                               values_from = hotspots_gi) |>
             as.data.frame()
 
-        hot_gi$intensity_gi <- rowSums(hot_gi %>% dplyr::select(-id))
+        hot_gi$intensity_gi <- rowSums(hot_gi |>  dplyr::select(-id))
         hot_gi$hotspots_gi <- ifelse(hot_gi$intensity_gi > 0,1,0)
 
         # we joint the sf object with the dataframe of hotspot
         sf:::cbind.sf(x,
-                      gi %>% dplyr::select(-id),
-                      hot_gi %>% dplyr::select(-id))[, c(id, "intensity_gi", "hotspots_gi")]
+                      gi |>  dplyr::select(-id),
+                      hot_gi |>  dplyr::select(-id))[, c(id, "intensity_gi", "hotspots_gi")]
 
     } else if(gi_hi == "hi"){
 
         # apply the functions ####
-        losh.cs <- w %>%
-            dplyr::mutate(losh_cs = purrr::map(data, losh_cs)) %>%
-            dplyr::mutate(hi = purrr::map(losh_cs, extract_losh, hi = TRUE)) %>%
-            dplyr::mutate(p_value = purrr::map(losh_cs, extract_losh, hi = FALSE)) %>%
+        losh.cs <- w |>
+            dplyr::mutate(losh_cs = purrr::map(data, losh_cs)) |>
+            dplyr::mutate(hi = purrr::map(losh_cs, extract_losh, hi = TRUE)) |>
+            dplyr::mutate(p_value = purrr::map(losh_cs, extract_losh, hi = FALSE)) |>
             dplyr::mutate(hotspothi = purrr::map(p_value, hotspot_hi))
 
         # extract de loss values, column bind ####
-        hi <- losh.cs %>%
-            dplyr::select(data, hi) %>%
-            tidyr::unnest(cols = c(data, hi)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("Hi", !! rlang::sym(time), sep = "_")) %>%
+        hi <- losh.cs |>
+            dplyr::select(data, hi) |>
+            tidyr::unnest(cols = c(data, hi)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("Hi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Hi")
 
         # extract the pa values of loss ####
-        p_values <- losh.cs %>%
-            dplyr::select(data,p_value) %>%
-            tidyr::unnest(cols = c(data, p_value)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("p_val", !! rlang::sym(time), sep = "_")) %>%
+        p_values <- losh.cs |>
+            dplyr::select(data,p_value) |>
+            tidyr::unnest(cols = c(data, p_value)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("p_val", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "Pr()")
 
         # define the hotspots ####
-        hot_hi <- losh.cs %>%
-            dplyr::select(data, hotspothi) %>%
-            tidyr::unnest(cols = c(data, hotspothi)) %>%
-            as.data.frame() %>%
-            dplyr::mutate(time = paste("hotspot.hi", !! rlang::sym(time), sep = "_")) %>%
+        hot_hi <- losh.cs |>
+            dplyr::select(data, hotspothi) |>
+            tidyr::unnest(cols = c(data, hotspothi)) |>
+            as.data.frame() |>
+            dplyr::mutate(time = paste("hotspot.hi", !! rlang::sym(time), sep = "_")) |>
             tidyr::pivot_wider(id_cols = id,
                                names_from = time,
                                values_from = "hotspot.hi")
 
-        hot_hi$intensity_hi <- rowSums(hot_hi %>% dplyr::select(-id))
+        hot_hi$intensity_hi <- rowSums(hot_hi |>  dplyr::select(-id))
         hot_hi$hotspots_hi <- ifelse(hot_hi$intensity_hi > 0,1,0)
 
         # we joint the sf object with the dataframe of hotspot
         sf:::cbind.sf(x,
-                      hi %>% dplyr::select(-id),
-                      p_values %>% dplyr::select(-id),
-                      hot_hi %>% dplyr::select(-id))[, c(id, "intensity_hi", "hotspots_hi")]
+                      hi |>  dplyr::select(-id),
+                      p_values |>  dplyr::select(-id),
+                      hot_hi |>  dplyr::select(-id))[, c(id, "intensity_hi", "hotspots_hi")]
     } else {}
 }
