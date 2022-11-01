@@ -38,7 +38,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
 
 
-    if(nrow(locality$locality) > 1){
+    if(nrow(locality) > 1){
         loc <- locality |> sf::st_union()
 
     } else {
