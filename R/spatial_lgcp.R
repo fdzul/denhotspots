@@ -301,7 +301,10 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
         # Step 5.2 Define the stack for the prediction ####
         # 3.2.2 extract the coordinates of grid point prediction #####
 
-        p <- deneggs::loc_grid_points(sf = loc, cell_size = cell_size)
+        #p <- deneggs::loc_grid_points(sf = loc, cell_size = cell_size)
+        p <- sf::st_sample(x = loc, size = cell_size, type = "regular") |>
+            sf::st_as_sf()
+
         #p <- raster::coordinates(r_loc)
 
         # 3.2.3 make the projector matrix for use prediction ####
