@@ -39,10 +39,10 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
 
     if(nrow(locality$locality) > 1){
-        loc <- locality$locality |> sf::st_union()
+        loc <- locality |> sf::st_union()
 
     } else {
-        loc <-  locality$locality
+        loc <-  locality
     }
 
     # Step 1.2 convert the locality sf in raster ####
@@ -368,7 +368,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                           Y = y)|>
             sf::st_as_sf(coords = c("X", "Y"),
                          crs = 4326)
-        p_sf <- p[locality$locality,]
+        p_sf <- p[locality,]
         p <- p_sf|>
             sf::st_drop_geometry()
 
