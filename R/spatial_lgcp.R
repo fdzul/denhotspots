@@ -199,7 +199,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                           y = lambda@coords[,2])|>
             sf::st_as_sf(coords = c("x", "y"),
                          crs= 4326)
-        lambda_sf <- lambda_sf[locality$locality, ]
+        lambda_sf <- lambda_sf[locality, ]
 
         # Step 8.
         map <- plotly::ggplotly(ggplot2::ggplot() +
