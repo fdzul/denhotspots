@@ -26,12 +26,20 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                          cell_size = NULL, name ){
 
     # Step 1.1 Generate Boundary ####
-    locality <- rgeomex::extract_ageb(locality = locality,
-                                      cve_geo = cve_edo)
+    extract_locality <- function(cve_edo, locality){
+        rgeomex::loc_inegi19_mx |>
+            dplyr::filter(CVE_ENT %in% c(cve_edo)) |>
+            dplyr::filter(NOMGEO %in% c(rgeomex::find_most_similar_string(locality, unique(NOMGEO)))) |>
+            sf::st_make_valid()
+    }
+    locality <- extract_locality(cve_edo = cve_edo ,
+                            locality = locality)
+
+
 
 
     if(nrow(locality$locality) > 1){
-        loc <- locality$locality %>% sf::st_union()
+        loc <- locality$locality |> sf::st_union()
 
     } else {
         loc <-  locality$locality
@@ -46,7 +54,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
 
     # Step 4. spatial point pattern dataset ####
-    y <- dataset %>%
+    y <- dataset|>
         sf::st_as_sf(coords = c(longitude, latitude),
                      crs= 4326)
     y <- y[loc,]
@@ -186,9 +194,9 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                                                mask = loc_sp), ~ exp(mySmooth + Intercept))
 
         # step 7.
-        lambda_sf <- lambda@data  %>%
+        lambda_sf <- lambda@data |>
             dplyr::mutate(x = lambda@coords[,1],
-                          y = lambda@coords[,2]) %>%
+                          y = lambda@coords[,2])|>
             sf::st_as_sf(coords = c("x", "y"),
                          crs= 4326)
         lambda_sf <- lambda_sf[locality$locality, ]
@@ -355,13 +363,13 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
         p$pred_ul <- mod$summary.fitted.values[index, "0.025quant"]
         p$year <- unique(lubridate::year(y$onset))
 
-        p <- p %>%
+        p <- p|>
             dplyr::mutate(X = x,
-                          Y = y) %>%
+                          Y = y)|>
             sf::st_as_sf(coords = c("X", "Y"),
                          crs = 4326)
         p_sf <- p[locality$locality,]
-        p <- p_sf %>%
+        p <- p_sf|>
             sf::st_drop_geometry()
 
         map <- ggplot2::ggplot() +
