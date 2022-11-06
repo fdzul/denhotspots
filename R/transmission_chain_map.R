@@ -26,9 +26,9 @@ transmission_chains_map <-function(geocoded_dataset,
                      crs = 4326) |>
         dplyr::select(DES_MPO_RES,VEC_ID, onset, SEM, ESTATUS_CASO, x, y,
                       DENGUE_SER_TRIPLEX, DES_DIAG_FINAL, IDE_EDA_ANO) |>
-        dplyr::mutate(ESTATUS_CASO = ifelse(ESTATUS_CASO == 1,
-                                            "Probable",
-                                            "Confirmado"))
+        dplyr::mutate(ESTATUS_CASO = ifelse(ESTATUS_CASO == 2,
+                                            "Confirmado",
+                                            "Probable"))
 
     # Step 2. define the state or locality, probable of confirmed #####
     if(is.null(locality) == TRUE){
