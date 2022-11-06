@@ -65,7 +65,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
     mesh <- deneggs::mesh(x = dataset,
                           k = k,
                           loc_limit = loc_sp,
-                          plot = TRUE,
+                          plot = plot,
                           long = longitude,
                           lat = latitude)
     gg_mesh <- ggplot2::ggplot() +
