@@ -68,7 +68,7 @@ read_dengue_dataset <- function(path, spatial_resolution, des_edo_res = NULL, de
 
     } else if(spatial_resolution == "municipality"){
 
-        data.table::fread(x,
+        data.table::fread(path,
                           header = TRUE,
                           quote = "",
                           select = vect_cols,
