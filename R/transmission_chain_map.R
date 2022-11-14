@@ -135,7 +135,7 @@ transmission_chains_map <-function(geocoded_dataset,
                              dplyr::filter(ESTATUS_CASO == "Confirmado") |>
                              dplyr::filter(DES_DIAG_FINAL %in% c("DENGUE CON SIGNOS DE ALARMA",
                                                                  "DENGUE GRAVE",
-                                                                 "ENGUE NO GRAVE")),
+                                                                 "DENGUE NO GRAVE")),
                          layer.name = "Confirmados Acumulados",
                          legend =TRUE,
                          alpha = 0.5,
@@ -153,7 +153,7 @@ transmission_chains_map <-function(geocoded_dataset,
                              dplyr::filter(ESTATUS_CASO == "Confirmado") |>
                              dplyr::filter(DES_DIAG_FINAL %in% c("DENGUE CON SIGNOS DE ALARMA",
                                                                  "DENGUE GRAVE",
-                                                                 "ENGUE NO GRAVE")) |>
+                                                                 "DENGUE NO GRAVE")) |>
                              dplyr::filter(SEM >= lubridate::epiweek(Sys.Date())-3),
                          layer.name = "Transmisión Activa (Confirmados)",
                          legend =TRUE,
