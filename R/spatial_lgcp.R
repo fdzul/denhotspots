@@ -165,7 +165,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
             my_list <- list("data" = x,
                             "pred" = grid,
                             "loc" = loc,
-                            "gg_mesh" = gg_mesg,
+                            "gg_mesh" = gg_mesh,
                             "map" = map)
             return(my_list)
         }
