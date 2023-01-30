@@ -145,7 +145,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                                                 cast = TRUE))
         ###
         y <- sf::st_as_sf(grid)
-        map <- plotly::ggplotly(ggplot2::ggplot() +
+        map <- ggplot2::ggplot() +
                                     ggplot2::geom_sf(data = y,
                                                      ggplot2::aes(fill = intensity),
                                                      colour = "white",
@@ -158,13 +158,14 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                                     ggplot2::scale_fill_distiller("Casos",
                                                                   palette = name,
                                                                   direction = 1) +
-                                    cowplot::theme_map())
+                                    cowplot::theme_map()
 
         ## Step 9. return the map and the prediction values ####
         multi_return <- function() {
             my_list <- list("data" = x,
                             "pred" = grid,
                             "loc" = loc,
+                            "gg_mesh" = gg_mesg,
                             "map" = map)
             return(my_list)
         }
