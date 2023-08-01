@@ -14,7 +14,7 @@
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
 #' @examples
 read_dengue_dataset <- function(path, spatial_resolution,status_caso, des_edo_res = NULL, des_mpo_res = NULL){
-    vect_cols <- c("VEC_ID","IDE_EDA_ANO", "IDE_SEX",
+    vect_cols <- c("FOL_ID","VEC_ID","IDE_EDA_ANO", "IDE_SEX",
                    "DES_CAL","IDE_CAL", "NUM_EXT", "NUM_INT",
                    "IDE_COL", "IDE_CP",
                    "CVE_LOC_RES", "DES_LOC_RES", "CVE_MPO_RES", "DES_MPO_RES",
