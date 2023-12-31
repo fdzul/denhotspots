@@ -19,7 +19,7 @@ space_time_link_map <- function(x,
                                 facetmap = NULL){
     # Step 1. load the locality ####
     y <- rgeomex::extract_ageb(locality = locality,
-                               cve_geo = cve_edo)
+                               cve_edo = cve_edo)
 
     # Step 2. load the dengue cases ####
     z <- x$x %>%
