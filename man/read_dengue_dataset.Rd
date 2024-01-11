@@ -7,6 +7,7 @@
 read_dengue_dataset(
   path,
   spatial_resolution,
+  status_caso,
   des_edo_res = NULL,
   des_mpo_res = NULL
 )
@@ -19,6 +20,8 @@ read_dengue_dataset(
 \item{des_edo_res}{is a string for define the state in uppercase.}
 
 \item{des_mpo_res}{is a string for define the municipality in uppercase.}
+
+\item{estatus_caso}{1 probable, 2 confirmado, & 3 descartado.}
 }
 \value{
 a data.table object.
