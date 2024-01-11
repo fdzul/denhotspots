@@ -1,6 +1,6 @@
 #' map_risk
 #'
-#' The xxx function generates the map of the operational scenarios or epidemiological scenarios based on the hotspots of dengue transmission and the hotspots of the abundance of dengue vector eggs.
+#' The map_risk function generates the map of the operational scenarios or epidemiological scenarios based on the hotspots of dengue transmission and the hotspots of the abundance of dengue vector eggs.
 #'
 #' @param risk is the spatial risk dataset.
 #' @param staticmap is a logical value, if true the map is static else the map is interactive.
