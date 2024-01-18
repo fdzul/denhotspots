@@ -15,7 +15,7 @@ map_risk(risk, staticmap)
 a ggplot o mapview object
 }
 \description{
-The xxx function generates the map of the operational scenarios or epidemiological scenarios based on the hotspots of dengue transmission and the hotspots of the abundance of dengue vector eggs.
+The map_risk function generates the map of the operational scenarios or epidemiological scenarios based on the hotspots of dengue transmission and the hotspots of the abundance of dengue vector eggs.
 }
 \note{
 To generate the map with this function, you must first run the risk_ageb function.
