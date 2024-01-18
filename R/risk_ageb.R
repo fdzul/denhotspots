@@ -13,7 +13,7 @@
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
 #' @seealso \link[deneggs]{eggs_hotspots}, \link[deneggs]{spde_pred_map}, \link[deneggs]{eggs_hotspots_week} & @seealso \link[INLA]{inla}
 #' @examples
-risk_agebs <- function(betas, hotspots, intensity_perc, locality, cve_edo){
+risk_ageb <- function(betas, hotspots, intensity_perc, locality, cve_edo){
 
     # extract the locality ####
     locality <- rgeomex::extract_locality(locality = locality,
