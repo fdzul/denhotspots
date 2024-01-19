@@ -1,0 +1,12 @@
+pandoc: 3.1.1
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  clusters_analysis: clusters_analysis.html
+  count_cases_by_polygons: count_cases_by_polygons.html
+  geocoding: geocoding.html
+  hotspots_analysis: hotspots_analysis.html
+  knox_test: knox_test.html
+  lgcp_spatial: lgcp_spatial.html
+last_built: 2024-01-19T01:16Z
+
