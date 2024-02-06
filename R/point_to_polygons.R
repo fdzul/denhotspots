@@ -25,15 +25,15 @@ point_to_polygons <- function(x, y, ids, time, coords, crs, dis){
 
     }
     time <- dplyr::enquo(time)
-    z <- x %>%
+    z <- x |>
         sf::st_as_sf(coords = coords,
-                     crs = crs) %>%
-        dplyr::group_by(!! time) %>%   ## !!
-        tidyr::nest() %>%
+                     crs = crs) |>
+        dplyr::group_by(!! time) |>    ## !!
+        tidyr::nest() |>
         dplyr::mutate(count = purrr::map(data, point_in_polygons, y,
-                                         ids = c(ids))) %>%
-        dplyr::select(-data) %>%
-        tidyr::unnest(count) %>%
+                                         ids = c(ids))) |>
+        dplyr::select(-data) |>
+        tidyr::unnest(count) |>
         tidyr::pivot_wider(names_from = dplyr::as_label(time),  ## ??? how parametrizar
                            values_from = "n")
     w <- dplyr::left_join(x = y[, c(ids)],
