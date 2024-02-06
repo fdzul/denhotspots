@@ -31,7 +31,7 @@ staticmap_intensity <- function(x, pal, option = NULL, name = NULL,
                                  col = "white",
                                  lwd = 0.3) +
                 ggplot2::theme_void() +
-                ggplot2::geom_sf(data = x %>% dplyr::filter(intensity_gi > 0),
+                ggplot2::geom_sf(data = x |> dplyr::filter(intensity_gi > 0),
                                  ggplot2::aes(fill = intensity_gi),
                                  col = "gray95",
                                  lwd = 0.01) +
@@ -51,7 +51,7 @@ staticmap_intensity <- function(x, pal, option = NULL, name = NULL,
                                  col = "white",
                                  lwd = 0.3) +
                 ggplot2::theme_void() +
-                ggplot2::geom_sf(data = x %>% dplyr::filter(intensity_gi > 0),
+                ggplot2::geom_sf(data = x |> dplyr::filter(intensity_gi > 0),
                                  ggplot2::aes(fill = intensity_gi),
                                  col = "gray90",
                                  lwd = 0.01) +
