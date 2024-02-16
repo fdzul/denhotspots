@@ -39,7 +39,9 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
 
     if(nrow(locality) > 1){
-        loc <- locality |> sf::st_union()
+        loc <- locality |>
+            sf::st_union() |>
+            sf::st_as_sf()
 
     } else {
         loc <-  locality
@@ -54,7 +56,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
 
     # Step 4. spatial point pattern dataset ####
-    y <- dataset|>
+    y <- dataset |>
         sf::st_as_sf(coords = c(longitude, latitude),
                      crs= 4326)
     y <- y[loc,]
