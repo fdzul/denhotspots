@@ -57,14 +57,16 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
     # Step 4. spatial point pattern dataset ####
     y <- dataset |>
-        sf::st_as_sf(coords = c(longitude, latitude),
-                     crs= 4326)
+        dplyr::mutate(x = long,
+                      y = lat) |>
+        sf::st_as_sf(coords = c("x", "y"),
+                     crs = 4326)
     y <- y[loc,]
 
     x <- sf::as_Spatial(from = y, cast = TRUE)
 
     # Step 4. make the mesh ####
-    mesh <- deneggs::mesh(x = dataset,
+    mesh <- deneggs::mesh(x = y |> sf::st_drop_geometry(),
                           k = k,
                           loc_limit = loc_sp,
                           plot = plot,
@@ -72,15 +74,15 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
                           lat = latitude)
     gg_mesh <- ggplot2::ggplot() +
         inlabru::gg(data = mesh) +
-        inlabru::gg(data = x,
-                    shape = 21,
-                    fill = "tomato",
-                    alpha = 0.7,
-                    color= "white",
-                    stroke = 1,
-                    lwd = 3) +
+        ggplot2::geom_sf(data = y,
+                         shape = 21,
+                         fill = "tomato",
+                         alpha = 0.7,
+                         color= "white",
+                         stroke = 1,
+                         lwd = 3) +
         inlabru::gg(loc_sp) +
-        ggplot2::coord_fixed() +
+        #ggplot2::coord_fixed() +
         ggplot2::theme_void()
 
     if(approach == "lattice"){
