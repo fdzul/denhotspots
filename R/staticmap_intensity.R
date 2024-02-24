@@ -33,8 +33,8 @@ staticmap_intensity <- function(x, pal, option = NULL, name = NULL,
                 ggplot2::theme_void() +
                 ggplot2::geom_sf(data = x |> dplyr::filter(intensity_gi > 0),
                                  ggplot2::aes(fill = intensity_gi),
-                                 col = "gray95",
-                                 lwd = 0.01) +
+                                 col = "white",
+                                 lwd = 0.3) +
                 ggplot2::scale_fill_gradientn(name = "Intensidad",
                                               colours = c(pal(n = max(x$intensity_gi),
                                                               name = name)),
@@ -53,8 +53,8 @@ staticmap_intensity <- function(x, pal, option = NULL, name = NULL,
                 ggplot2::theme_void() +
                 ggplot2::geom_sf(data = x |> dplyr::filter(intensity_gi > 0),
                                  ggplot2::aes(fill = intensity_gi),
-                                 col = "gray90",
-                                 lwd = 0.01) +
+                                 col = "white",
+                                 lwd = 0.3) +
                 ggplot2::scale_fill_gradientn(name = "Intensidad",
                                               colours = c(pal(n = max(x$intensity_gi),
                                                               option = option,
