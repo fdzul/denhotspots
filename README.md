@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# denhotspots
+# denhotspots <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -17,8 +17,7 @@ laboratory of
 The goal of ***denhotspots*** is to carry out a spatial analysis of
 dengue:
 
-1)  hotspots analysis with getis & ord statistics
-    (![G^\*](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;G%5E%2A "G^*")).
+1)  hotspots analysis with getis & ord statistics ($G^*$).
 
 2)  Space-time analysis with scan statistics
 
@@ -45,16 +44,16 @@ remotes::install_github("fdzul/denhotspots")
 
 ## Authors
 
--   **Felipe Antonio Dzul Manzanilla** -**<https://github.com/fdzul>** -
-    Packages developed in github:
+- **Felipe Antonio Dzul Manzanilla** -**<https://github.com/fdzul>** -
+  Packages developed in github:
 
-    1)  [boldenr](https://github.com/fdzul/boldenr).
-    2)  [dendata](https://github.com/fdzul/dendata).
-    3)  [deneggs](https://github.com/fdzul/deneggs).
-    4)  [rgeomex](https://github.com/fdzul/rgeomex).
-    5)  [covid19mx](https://github.com/fdzul/covid19mx).
+  1)  [boldenr](https://github.com/fdzul/boldenr).
+  2)  [dendata](https://github.com/fdzul/dendata).
+  3)  [deneggs](https://github.com/fdzul/deneggs).
+  4)  [rgeomex](https://github.com/fdzul/rgeomex).
+  5)  [covid19mx](https://github.com/fdzul/covid19mx).
 
--   **Fabian Correa Morales** -
+- **Fabian Correa Morales** -
 
 See also the list of
 [contributors](https://github.com/fdzul/deneggs/contributors) who
