@@ -57,9 +57,9 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
     # Step 4. spatial point pattern dataset ####
     y <- dataset |>
-        dplyr::mutate(x = longitude,
-                      y = latitude) |>
-        sf::st_as_sf(coords = c("x", "y"),
+        dplyr::mutate(longitude = x,
+                      latitude = y) |>
+        sf::st_as_sf(coords = c("longitude", "latitude"),
                      crs = 4326)
     y <- y[loc,]
 
