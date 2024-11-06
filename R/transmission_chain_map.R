@@ -29,6 +29,9 @@ transmission_chains_map <-function(geocoded_dataset,
         dplyr::mutate(ESTATUS_CASO = ifelse(ESTATUS_CASO == 2,
                                             "Confirmado",
                                             "Probable"))
+    geocoded_dataset <- geocoded_dataset[rgeomex::AGEE_inegi19_mx |>
+                                             dplyr::filter(CVE_ENT %in% c(cve_edo)), ]
+
 
     # Step 2. define the state or locality, probable of confirmed #####
     if(is.null(locality) == TRUE){
