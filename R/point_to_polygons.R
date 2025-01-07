@@ -35,7 +35,8 @@ point_to_polygons <- function(x, y, ids, time, coords, crs, dis){
         dplyr::select(-data) |>
         tidyr::unnest(count) |>
         tidyr::pivot_wider(names_from = dplyr::as_label(time),  ## ??? how parametrizar
-                           values_from = "n")
+                           values_from = "n",
+                           names_sort = TRUE)
     w <- dplyr::left_join(x = y[, c(ids)],
                           y = z,
                           by = c(ids))
