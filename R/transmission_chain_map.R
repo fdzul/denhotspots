@@ -38,13 +38,13 @@ transmission_chains_map <-function(geocoded_dataset,
         if(dengue_cases == "Probable"){
             x <- geocoded_dataset |>
                 dplyr::select(onset, VEC_ID, x, y, IDE_EDA_ANO, ESTATUS_CASO ) |>
-                dplyr::filter(ESTATUS_CASO == "Probable") |>
+                dplyr::filter(ESTATUS_CASO %in% c("Probable", "Confirmado")) |>
                 sf::st_drop_geometry()
 
         } else if(dengue_cases == "Confirmado"){
             x <- geocoded_dataset |>
                 dplyr::select(onset, VEC_ID, x, y, IDE_EDA_ANO, ESTATUS_CASO ) |>
-                dplyr::filter(ESTATUS_CASO == "Confirmado") |>
+                dplyr::filter(ESTATUS_CASO %in% c("Probable", "Confirmado")) |>
                 sf::st_drop_geometry()
         } else{
 
