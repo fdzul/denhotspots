@@ -145,24 +145,13 @@ transmission_chains_map <-function(geocoded_dataset,
                          color = "white",
                          col.regions = c("#ECB22E")) +
         mapview::mapview(geocoded_dataset |>
-                             dplyr::filter(ESTATUS_CASO == "Probable") |>
-                             dplyr::filter(SEM >= lubridate::epiweek(Sys.Date())-4 & SEM <= lubridate::epiweek(Sys.Date())),
-                         layer.name = "Transmisión Activa (Probables)",
+                             dplyr::filter(ESTATUS_CASO %in% c("Probable", "Confirmado")) |>
+                             dplyr::filter(SEM >= lubridate::epiweek(Sys.Date())-3 & SEM <= lubridate::epiweek(Sys.Date())),
+                         layer.name = "Transmisión Activa (Probables & Confirmados)",
                          #legend =TRUE,
                          alpha = 0.5,
                          color = "white",
                          col.regions = c("#2EB67D")) +
-        mapview::mapview(geocoded_dataset |>
-                             dplyr::filter(ESTATUS_CASO == "Confirmado") |>
-                             dplyr::filter(DES_DIAG_FINAL %in% c("DENGUE CON SIGNOS DE ALARMA",
-                                                                 "DENGUE GRAVE",
-                                                                 "DENGUE NO GRAVE")) |>
-                             dplyr::filter(SEM >= lubridate::epiweek(Sys.Date())-4 & SEM <= lubridate::epiweek(Sys.Date())),
-                         layer.name = "Transmisión Activa (Confirmados)",
-                         legend =TRUE,
-                         #alpha = 0.5,
-                         color = "white",
-                         col.regions = c("#E01E5A")) +
         mapview::mapview(w,
                          layer.name = "Cadenas de Transmisión (Casos)",
                          legend =TRUE,
