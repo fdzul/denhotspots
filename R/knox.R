@@ -33,12 +33,12 @@
 knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
     # step 1. transform dataframe to sf object ####
     if(planar_coord == FALSE){
-        x <- x %>%
+        x <- x |>
             sf::st_as_sf(coords = c("x", "y"),
-                         crs = 4326) %>%
-            sf::st_transform(crs = crs) %>%
+                         crs = 4326) |>
+            sf::st_transform(crs = crs) |>
             dplyr::mutate(x = sf::st_coordinates(geometry)[,1],
-                          y = sf::st_coordinates(geometry)[,2]) %>%
+                          y = sf::st_coordinates(geometry)[,2]) |>
             sf::st_drop_geometry()
     }
 
@@ -70,30 +70,30 @@ knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
         shape.line.df <- sp::SpatialLinesDataFrame(shape,id,match.ID = TRUE)
 
 
-        space_time_link <- sf::st_as_sf(shape.line.df) %>%
-            sf::st_set_crs(crs) %>%
+        space_time_link <- sf::st_as_sf(shape.line.df) |>
+            sf::st_set_crs(crs) |>
             sf::st_transform(crs = 4326)
     } else{
         linestring_od_point <- function(x) {
             w <- sf::st_sfc(sf::st_point(c(x$Xo, x$Yo)))
             z <- sf::st_sfc(sf::st_point(c(x$Xd, x$Yd)))
-            sf::st_combine(c(w,z)) %>%
-                sf::st_cast("LINESTRING") %>%
-                sf::st_sfc() %>%
+            sf::st_combine(c(w,z)) |>
+                sf::st_cast("LINESTRING") |>
+                sf::st_sfc() |>
                 sf::st_as_sf(crs = crs)
         }
 
         ###
-        space_time_link <- st_link %>%
-            dplyr::mutate(id = 1:dplyr::n()) %>%
-            dplyr::group_by(id ) %>%
-            tidyr::nest() %>%
-            dplyr::mutate(linestring = purrr::map(data,linestring_od_point)) %>%
-            dplyr::select(-data) %>%
-            tidyr::unnest(cols = c(linestring)) %>%
-            as.data.frame() %>%
-            sf::st_set_geometry(value = "x") %>%
-            sf::st_set_crs(crs) %>%
+        space_time_link <- st_link |>
+            dplyr::mutate(id = 1:dplyr::n()) |>
+            dplyr::group_by(id ) |>
+            tidyr::nest() |>
+            dplyr::mutate(linestring = purrr::map(data,linestring_od_point)) |>
+            dplyr::select(-data) |>
+            tidyr::unnest(cols = c(linestring)) |>
+            as.data.frame() |>
+            sf::st_set_geometry(value = "x") |>
+            sf::st_set_crs(crs) |>
             sf::st_transform(4326)
     }
 
