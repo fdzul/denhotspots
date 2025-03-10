@@ -151,7 +151,7 @@ transmission_chains_map <-function(geocoded_dataset,
                          #legend =TRUE,
                          alpha = 0.5,
                          color = "white",
-                         col.regions = c("#2EB67D")) +
+                         col.regions = "#E01E5A") +
         mapview::mapview(w,
                          layer.name = "Cadenas de Transmisión (Casos)",
                          legend =TRUE,
