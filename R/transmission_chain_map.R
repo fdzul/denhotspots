@@ -146,7 +146,7 @@ transmission_chains_map <-function(geocoded_dataset,
                          col.regions = c("#ECB22E")) +
         mapview::mapview(geocoded_dataset |>
                              dplyr::filter(ESTATUS_CASO %in% c("Probable", "Confirmado")) |>
-                             dplyr::filter(SEM >= lubridate::epiweek(Sys.Date())-3 & SEM <= lubridate::epiweek(Sys.Date())),
+                             dplyr::filter(SEM %in% c(lubridate::epiweek(Sys.Date())-3:lubridate::epiweek(Sys.Date()))),
                          layer.name = "Transmisión Activa (Probables & Confirmados)",
                          #legend =TRUE,
                          alpha = 0.5,
