@@ -6,13 +6,12 @@
 #' @param spatial_resolution is the spatial resolution or the administrative level. The values are country, state and municipality.
 #' @param des_edo_res is a string for define the state in uppercase.
 #' @param des_mpo_res is a string for define the municipality in uppercase.
-#' @param estatus_caso 1 probable, 2 confirmado, & 3 descartado.
+#' @param status_caso 1 probable, 2 confirmado, & 3 descartado.
 #'
 #' @return a data.table object.
 #' @export
 #'
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
-#' @examples
 read_dengue_dataset <- function(path, spatial_resolution,status_caso, des_edo_res = NULL, des_mpo_res = NULL){
     vect_cols <- c("FOL_ID","VEC_ID","IDE_EDA_ANO", "IDE_SEX",
                    "DES_CAL","IDE_CAL", "NUM_EXT", "NUM_INT",

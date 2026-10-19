@@ -16,7 +16,6 @@
 #' @return a object names x and a csv file in working dircetory.
 #' @export
 #'
-#' @examples
 subset_den <- function(x = NULL, path = NULL, edo, mun, loc, sinave_new, age_group, name){
 
     if (sinave_new == TRUE){

@@ -13,7 +13,6 @@
 #' @return a ggplot map.
 #' @export
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}.
-#' @examples
 staticmap_satscan <- function(x,
                               rsatscan = NULL, satscan,
                               locality, cve_edo,

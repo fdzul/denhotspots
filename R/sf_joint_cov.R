@@ -12,7 +12,6 @@
 #'
 #' @details The function use the \link[dplyr]{left_join} of dplyr.
 #'
-#' @examples
 sf_joint_cov <- function(path_dat, path_sf){
     # Step 1. load the dataset ####
     covid <- data.table::fread(path_dat,
@@ -48,6 +47,6 @@ sf_joint_cov <- function(path_dat, path_sf){
     mun_cov[is.na(mun_cov)] <- 0
 
     # Step 5. rbind the dataset
-    sf:::cbind.sf(mun_sf, mun_cov[,5:ncol(mun_cov)])
+    cbind(mun_sf, mun_cov[,5:ncol(mun_cov)])
 
 }

@@ -19,11 +19,22 @@
 #' @return a list with several object.
 #' @export
 #'
-#' @examples
 spatial_lgcp <- function(dataset, locality, cve_edo,
                          longitude, latitude, k, plot, resolution,
                          aproximation, integration,approach,
                          cell_size = NULL, name ){
+
+    rlang::check_installed(c("INLA", "deneggs", "terra", "sp"),
+                           reason = "to use `spatial_lgcp()`.")
+    approach <- match.arg(approach, c("lattice", "inlabru", "simpson"))
+    if(approach == "inlabru"){
+        rlang::check_installed(c("inlabru", "plotly"),
+                               reason = "to use `approach = \"inlabru\"`.")
+    }
+    if(approach == "simpson"){
+        rlang::check_installed("Matrix",
+                               reason = "to use `approach = \"simpson\"`.")
+    }
 
     # Step 1.1 Generate Boundary ####
     extract_locality <- function(cve_edo, locality){
@@ -48,8 +59,8 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
     }
 
     # Step 1.2 convert the locality sf in raster ####
-    r_loc <- raster::raster(x = loc,
-                            resolution = resolution)
+    r_loc <- terra::rast(terra::vect(loc),
+                         resolution = resolution)
 
     # Step 1.3 convert the locality sf in sp ####
     loc_sp <- sf::as_Spatial(from = loc, cast = TRUE)
@@ -86,37 +97,13 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
         ggplot2::theme_void()
 
     if(approach == "lattice"){
-        (nrow <- nrow(r_loc))
-        (ncol <- ncol(r_loc))
-        (nrow*ncol)
-
-        # Step 3. We initially set to 0 the values of all the raster cells
-        r_loc[] <- 0
-
-        # Step 4. count the dengue cases by cell ####
-        tab <- table(raster::cellFromXY(object = r_loc, xy = x))
-        r_loc[as.numeric(names(tab))] <- tab
-
-        # Step 5. convert the raster r to a SpatialPolygonsDataFrame ###
-
-        grid <- raster::rasterToPolygons(r_loc)
-
-
-
-        # step 6.  add to grid the data needed for modeling ####
-        grid <- grid[as.vector(t(matrix(1:nrow(grid), nrow = ncol, ncol = nrow))), ]
-        grid$id <- 1:nrow(grid)
-        grid$Y <- grid$layer
-        grid$cellarea <- resolution*resolution
-
-        # Step 7.  add a climates variables  ###
-        # grid$cov <- extract(rcov, coordinates(grid))
-
-        # Step 8. we delete the cells of grid that lie outside locality ####
-
-        gridmap <- raster::intersect(x = grid,
-                                     y = sf::as_Spatial(loc)) ## check
-        grid <- grid[grid$id %in% gridmap$id, ]
+        # Steps 3-8. count the cases by cell and keep the cells of the locality ####
+        lattice <- lgcp_lattice_grid(loc = loc,
+                                     pts = y,
+                                     resolution = resolution)
+        grid <- lattice$grid
+        nrow <- lattice$nrow
+        ncol <- lattice$ncol
 
         # Step 9. define the formula ####
         grid$id2 <- grid$id
@@ -127,7 +114,7 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
         # Step 10. Run INLA ####
         res <- INLA::inla(formula,
                           family = "poisson",
-                          data = grid@data,
+                          data = sf::st_drop_geometry(grid),
                           E = cellarea,
                           control.predictor = list(compute = TRUE))
 
@@ -144,11 +131,10 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
         grid$intensity <- round(res$summary.fitted.values[, "mean"] * cellarea, digits = 1)
         grid$LL <- round(res$summary.fitted.values[, "0.025quant"] * cellarea, digits = 1)
         grid$UL <- round(res$summary.fitted.values[, "0.975quant"] * cellarea, digits = 1)
-        grid <- raster::crop(x = grid,
-                             y = sf::as_Spatial(from = loc,
-                                                cast = TRUE))
+        grid <- suppressWarnings(sf::st_intersection(grid,
+                                                     sf::st_geometry(loc)))
         ###
-        y <- sf::st_as_sf(grid)
+        y <- grid
         map <- ggplot2::ggplot() +
                                     ggplot2::geom_sf(data = y,
                                                      ggplot2::aes(fill = intensity),
@@ -264,28 +250,9 @@ spatial_lgcp <- function(dataset, locality, cve_edo,
 
         # Step 7. calculate the weights associated with the mesh points ####
 
-        # Step 7.1  Voronoi polygons (as SpatialPolygons)
-        mytiles <- SDraw::voronoi.polygons(sp::SpatialPoints(mesh$loc[, 1:2]))
-
-
-        # Step 7.2 bo unday as SpatialPolygons ####
-
-        bdy.sp <- loc_sp
-
-        # Step 7.3 Compute weights ####
-
-        w <- sapply(1:length(mytiles), function(p) {
-            aux <- mytiles[p, ]
-
-            if(rgeos::gIntersects(aux, bdy.sp) ) {
-                return(rgeos::gArea(rgeos::gIntersection(aux, bdy.sp)))
-            } else {
-                return(0)
-            }
-        })
-
-        sum(w)
-        rgeos::gArea(bdy.sp)
+        # Step 7.1 Voronoi tiles of the mesh nodes clipped to the locality ####
+        w <- lgcp_voronoi_weights(mesh_loc = mesh$loc,
+                                  loc = loc)
 
         #Prepare data
         y.pp = rep(0:1, c(nv, n))

@@ -18,13 +18,13 @@
 #' @details the stascanR implements ths space-time analysis with [rsatscan](https://cran.r-project.org/web/packages/rsatscan/vignettes/rsatscan.html) package. The rsatscan package only does anything useful if you have installed [SaTScan](https://www.satscan.org/)
 #' @export
 #'
-#' @examples
 satscanR <- function(cas_file, geo_file,
                      start_date, end_date,
                      spatial_window,
                      temporal_window,
                      ssbatchfilename = "SaTScanBatch",
                      path_satscan){
+    rlang::check_installed("rsatscan", reason = "to use `satscanR()`.")
     # step 1. reset the option ####
     invisible(rsatscan::ss.options(reset = TRUE))
 

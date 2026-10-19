@@ -29,8 +29,8 @@
 #'      The coordinates should be projected to a planar system.
 #'      The function rknox test use the (knox)[https://github.com/thanhleviet/knox] package of (github)[https://github.com/].
 #'
-#' @examples
 knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
+    rlang::check_installed(c("knox", "sp"), reason = "to use `knox()`.")
     # step 1. transform dataframe to sf object ####
     if(planar_coord == FALSE){
         x <- x |>

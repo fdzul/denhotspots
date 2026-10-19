@@ -17,8 +17,8 @@
 #' @return a ggplot object.
 #' @export
 #'
-#' @examples
 bivariate_map <- function(w, x, y, dim, pal, style, size_axis, scale_leg, x_leg, y_leg){
+    rlang::check_installed("biscale", reason = "to use `bivariate_map()`.")
     x <- dplyr::enquo(x)
     y <- dplyr::enquo(y)
     data <- biscale::bi_class(w,

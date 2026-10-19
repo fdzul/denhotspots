@@ -15,6 +15,7 @@ transmission_chains_map <-function(geocoded_dataset,
                                    cve_edo,
                                    locality,
                                    dengue_cases){
+    rlang::check_installed("mapview", reason = "to use `transmission_chains_map()`.")
 
 
     # Step 1. create the column onset and conver to sf object ####
@@ -147,13 +148,13 @@ transmission_chains_map <-function(geocoded_dataset,
         mapview::mapview(geocoded_dataset |>
                              dplyr::filter(ESTATUS_CASO %in% c("Probable", "Confirmado")) |>
                              dplyr::filter(SEM %in% (lubridate::epiweek(Sys.Date())-4):(lubridate::epiweek(Sys.Date()))),
-                         layer.name = "Transmisión Activa (Probables & Confirmados)",
+                         layer.name = "Transmisi\u00F3n Activa (Probables & Confirmados)",
                          #legend =TRUE,
                          alpha = 0.5,
                          color = "white",
                          col.regions = "#E01E5A") +
         mapview::mapview(w,
-                         layer.name = "Cadenas de Transmisión (Casos)",
+                         layer.name = "Cadenas de Transmisi\u00F3n (Casos)",
                          legend =TRUE,
                          #alpha = 0.5,
                          color = "white",
@@ -162,7 +163,7 @@ transmission_chains_map <-function(geocoded_dataset,
                                                         direction = -1),
                          zcol = "week_factor") +
         mapview::mapview(st_link_week,
-                         layer.name = "Cadenas de Transmisión (Links)",
+                         layer.name = "Cadenas de Transmisi\u00F3n (Links)",
                          legend =FALSE,
                          #alpha = 0.5,
                          color = fishualize::fish(n = length(unique(st_link_week$week_factor)),

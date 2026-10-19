@@ -17,8 +17,8 @@
 #' @return  a file with extension rds.
 #'
 #' @seealso \link[ggmap]{geocode}
-#' @examples
 geocoden <- function(infile, address){
+    rlang::check_installed("ggmap", reason = "to use `geocoden()`.")
     getGeoDetails <- function(address){
         #use the gecode function to query google servers
         geo_reply = ggmap::geocode(address, output='all', messaging=TRUE, override_limit=TRUE)

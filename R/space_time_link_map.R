@@ -11,12 +11,12 @@
 #' @return a ggmap
 #' @export
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
-#' @examples
 space_time_link_map <- function(x,
                                 locality,
                                 cve_edo,
                                 maptype,
                                 facetmap = NULL){
+    rlang::check_installed(c("leaflet", "htmlwidgets"), reason = "to use `space_time_link_map()`.")
     # Step 1. load the locality ####
     y <- rgeomex::extract_ageb(locality = locality,
                                cve_edo = cve_edo)

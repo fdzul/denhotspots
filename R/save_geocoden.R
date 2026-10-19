@@ -12,7 +12,6 @@
 #' @return a RData
 #' @export
 #'
-#' @examples
 save_geocoden <- function(x, y, directory, loc){
     x <- x[!duplicated(x$index),]
     y <- cbind(y, x)

@@ -12,6 +12,7 @@
 #' @note To generate the map with this function, you must first run the risk_ageb function.
 #' @examples 1+1
 map_risk <- function(risk, staticmap){
+    rlang::check_installed("mapview", reason = "to use `map_risk()`.")
     if(staticmap == TRUE){
         ggplot2::ggplot() +
             ggplot2::geom_sf(data = risk,
@@ -32,6 +33,6 @@ map_risk <- function(risk, staticmap){
                                          "#FF9000FF",
                                          "gold",
                                          "#20c997"),
-                         layer.name = "Escenarios Epidemiológicos")
+                         layer.name = "Escenarios Epidemiol\u00F3gicos")
     }
 }

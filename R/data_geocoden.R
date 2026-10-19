@@ -9,7 +9,6 @@
 #' @return a vector.
 #' @export
 #'
-#' @examples
 data_geocoden <- function(infile, data, sinave_new){
     x <- data.table::fread(paste0("./", infile, ".csv" ))
 
@@ -98,8 +97,8 @@ data_geocoden <- function(infile, data, sinave_new){
 
 
         addresses <- stringr::str_replace_all(addresses,
-                                              pattern = " Colonia LOMAS DEL TAPATÍO , 45628 COL. LOMAS DEL TAPATIO,",
-                                              replacement = "  Colonia LOMAS DEL TAPATÍO,")
+                                              pattern = " Colonia LOMAS DEL TAPAT\u00CDO , 45628 COL. LOMAS DEL TAPATIO,",
+                                              replacement = "  Colonia LOMAS DEL TAPAT\u00CDO,")
         addresses <- stringr::str_replace_all(addresses,
                                               pattern = " SECC ",
                                               replacement = " SECCION ")
@@ -126,7 +125,7 @@ data_geocoden <- function(infile, data, sinave_new){
                                               pattern = " #",
                                               replacement = " ")
         addresses <- stringr::str_replace_all(addresses,
-                                              pattern = " ACAPULCO DE JUÁREZ,",
+                                              pattern = " ACAPULCO DE JU\u00C1REZ,",
                                               replacement = " ACAPULCO,")
         addresses <- stringr::str_replace_all(addresses,
                                               pattern = "NA ,",
@@ -156,7 +155,7 @@ data_geocoden <- function(infile, data, sinave_new){
         addresses <- stringr::str_replace_all(addresses, pattern = " FRACC\\.| FRACC ", replacement = " FRACCIONAMIENTO ")
         addresses <- stringr::str_replace_all(addresses, pattern = " INF\\.|INF ", replacement = " INFONAVIT ")
         addresses <- stringr::str_replace_all(addresses, pattern = "NULL | SIN NUMERO", replacement = " ")
-        addresses <- stringr::str_replace_all(addresses, pattern = " N° | # | NUM\\. | N0\\. | #| NO\\. | NO | N | NUM |#",
+        addresses <- stringr::str_replace_all(addresses, pattern = " N\u00B0 | # | NUM\\. | N0\\. | #| NO\\. | NO | N | NUM |#",
                                               replacement = " NUMERO ")
         addresses <- stringr::str_replace_all(addresses, pattern = "CALLE AVENIDA", replacement = "AVENIDA ")
     }

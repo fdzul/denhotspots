@@ -17,11 +17,11 @@ read_dengue_dataset(
 
 \item{spatial_resolution}{is the spatial resolution or the administrative level. The values are country, state and municipality.}
 
+\item{status_caso}{1 probable, 2 confirmado, & 3 descartado.}
+
 \item{des_edo_res}{is a string for define the state in uppercase.}
 
 \item{des_mpo_res}{is a string for define the municipality in uppercase.}
-
-\item{estatus_caso}{1 probable, 2 confirmado, & 3 descartado.}
 }
 \value{
 a data.table object.

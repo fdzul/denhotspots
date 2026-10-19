@@ -1,7 +1,7 @@
 Package: denhotspots
 Type: Package
-Title: a package for calculate gi and hi local spatial statistics
-Version: 0.1.0
+Title: Local Spatial Statistics and Space-Time Analysis of Dengue Hotspots
+Version: 0.2.0
 Authors@R: c(person(given = "Felipe Antonio",
                         family = "Dzul Manzanilla",
                         role = c("aut", "cre"),
@@ -23,14 +23,59 @@ Authors@R: c(person(given = "Felipe Antonio",
                         role = c("ctb"),
                         email = "fabiancorrea@msn.com",
                         comment = c(ORCID = "https://orcid.org/0000-0002-6193-1242")))
-Description: the denhotspots package calculate the gi and hi local spatial statistics for areal data.
+Description: Tools to identify persistent dengue transmission hotspots in Mexico.
+    Calculates the local spatial statistics Getis-Ord Gi* and local spatial
+    heteroscedasticity (Hi), runs space-time analyses (Knox test, SaTScan,
+    transmission chains) and fits spatial log-Gaussian Cox process models
+    with INLA to map the intensity of dengue cases.
 Encoding: UTF-8
 LazyData: true
 License: MIT + file LICENSE
 RoxygenNote: 7.3.3
-Depends:
-    R (>= 2.10)
+Depends: R (>= 4.1.0)
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    biscale,
+    deneggs,
+    ggmap,
+    htmlwidgets,
+    INLA,
+    inlabru,
+    knox,
+    leaflet,
+    mapview,
+    Matrix,
+    plotly,
+    rsatscan,
+    sp,
+    terra,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Imports:
+    cowplot,
+    data.table,
+    dplyr,
+    fishualize,
+    ggplot2,
+    ggspatial,
+    lubridate,
+    magrittr,
+    purrr,
+    rgeomex,
+    rlang (>= 1.0.0),
+    sf,
+    spdep,
+    stringr,
+    tidyr,
+    methods,
+    stats,
+    utils
+Remotes:
+    fdzul/rgeomex,
+    fdzul/deneggs,
+    fdzul/knox
+Additional_repositories: https://inla.r-inla-download.org/R/stable
+URL: https://github.com/fdzul/denhotspots, https://fdzul.github.io/denhotspots/
+BugReports: https://github.com/fdzul/denhotspots/issues
+Config/testthat/edition: 3

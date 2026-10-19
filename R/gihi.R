@@ -20,6 +20,8 @@
 #' Ord JK, Getis A. 1995. Local spatial autocorrelation statistics: distributional issues and an application. Geographical Analysis, 27, 286–306.
 #' Ord JK,  Getis A. 2012. Local spatial heteroscedasticity (LOSH), The Annals of Regional Science, 48 (2), 529–539.
 #' Bivand RS, Wong DWS. 2018. Comparing implementations of global and local indicators of spatial association. TEST, 27(3), 716–748.
+#'
+#' @export
 gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
 
     #
@@ -43,8 +45,8 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
     # Convert the sf object to sp object and ####
     # create the neighboorhoods
 
-    z_hi <- spdep::poly2nb(as(x, "Spatial"), queen = TRUE)
-    z_gi <- spdep::include.self(spdep::poly2nb(as(x, "Spatial"),queen = TRUE))
+    z_hi <- spdep::poly2nb(x, queen = TRUE)
+    z_gi <- spdep::include.self(spdep::poly2nb(x,queen = TRUE))
 
     # Spatial Weigth Matriz ####
     # Spatial weights for neighbours lists
@@ -164,7 +166,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
         hot_hi$hotspots_hi <- ifelse(hot_hi$intensity_hi > 0,1,0)
 
         # we joint the sf object with the dataframe of hotspot of gi and hi ####
-        sf:::cbind.sf(x,
+        cbind(x,
                       gi |>  dplyr::select(-id),
                       hot_gi |>  dplyr::select(-id),
                       hi |>  dplyr::select(-id),
@@ -200,7 +202,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
         hot_gi$hotspots_gi <- ifelse(hot_gi$intensity_gi > 0,1,0)
 
         # we joint the sf object with the dataframe of hotspot
-        sf:::cbind.sf(x,
+        cbind(x,
                       gi |>  dplyr::select(-id),
                       hot_gi |>  dplyr::select(-id))[, c(id, "intensity_gi", "hotspots_gi")]
 
@@ -247,7 +249,7 @@ gihi <- function(x, gi_hi, id, dis, time, alpha = NULL){
         hot_hi$hotspots_hi <- ifelse(hot_hi$intensity_hi > 0,1,0)
 
         # we joint the sf object with the dataframe of hotspot
-        sf:::cbind.sf(x,
+        cbind(x,
                       hi |>  dplyr::select(-id),
                       p_values |>  dplyr::select(-id),
                       hot_hi |>  dplyr::select(-id))[, c(id, "intensity_hi", "hotspots_hi")]
