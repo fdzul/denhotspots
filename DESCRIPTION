@@ -2,27 +2,18 @@ Package: denhotspots
 Type: Package
 Title: Local Spatial Statistics and Space-Time Analysis of Dengue Hotspots
 Version: 0.2.0
-Authors@R: c(person(given = "Felipe Antonio",
-                        family = "Dzul Manzanilla",
-                        role = c("aut", "cre"),
-                        email = "felipe.dzul.m@gmail.com",
-                        comment = c(ORCID = "https://orcid.org/0000-0002-2085-9141")),
-             person(given = "Cecilia",
-                        family = "Cruz López",
-                        role = c("aut"),
-                        email = "ceccruz@uv.mx",
-                        comment = c(ORCID = "//orcid.org/0000-0002-9156-5669")
-                        ),
-              person(given = "Emmanuel",
-                        family = "Morales García",
-                        role = c("aut"),
-                        email = "emmorales@uv.mx",
-                        comment = c(ORCID = "orcid.org/0000-0002-6837-9227")),
-              person(given = "Fabian",
-                        family = "Correa-Morales",
-                        role = c("ctb"),
-                        email = "fabiancorrea@msn.com",
-                        comment = c(ORCID = "https://orcid.org/0000-0002-6193-1242")))
+Authors@R: c(
+    person("Felipe Antonio", "Dzul Manzanilla", , "felipe.dzul.m@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-2085-9141")),
+    person("Fabián", "Correa-Morales", , "fabiancorrea@msn.com", role = "aut",
+           comment = c(ORCID = "0000-0002-6193-1242")),
+    person("Emmanuel", "Morales García", , "emmorales@uv.mx", role = "aut",
+           comment = c(ORCID = "0000-0002-6837-9227")),
+    person("Cecilia", "Cruz López", , "ceccruz@uv.mx", role = "aut",
+           comment = c(ORCID = "0000-0002-9156-5669")),
+    person("Héctor", "Gómez-Dantés", , "hector.gomez@insp.mx", role = "aut",
+           comment = c(ORCID = "0000-0002-2025-3641"))
+  )
 Description: Tools to identify persistent dengue transmission hotspots in Mexico.
     Calculates the local spatial statistics Getis-Ord Gi* and local spatial
     heteroscedasticity (Hi), runs space-time analyses (Knox test, SaTScan,

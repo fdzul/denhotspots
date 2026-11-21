@@ -57,7 +57,7 @@ remotes::install_github("fdzul/denhotspots")
   4) [rgeomex](https://github.com/fdzul/rgeomex).
   5) [covid19mx](https://github.com/fdzul/covid19mx).
 
-* **Fabian Correa Morales** -
+* **Fabián Correa-Morales** -
 
 See also the list of [contributors](https://github.com/fdzul/deneggs/contributors) who participated in this project.
 
