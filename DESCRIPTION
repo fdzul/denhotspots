@@ -32,7 +32,6 @@ Suggests:
     htmlwidgets,
     INLA,
     inlabru,
-    knox,
     leaflet,
     mapview,
     Matrix,
@@ -63,8 +62,7 @@ Imports:
     utils
 Remotes:
     fdzul/rgeomex,
-    fdzul/deneggs,
-    fdzul/knox
+    fdzul/deneggs
 Additional_repositories: https://inla.r-inla-download.org/R/stable
 URL: https://github.com/fdzul/denhotspots, https://fdzul.github.io/denhotspots/
 BugReports: https://github.com/fdzul/denhotspots/issues

@@ -1,37 +1,66 @@
 #' Knox test of space-time interaction
 #'
-#' @description This function implement space-time analysis with the knox test
+#' @description Tests whether the cases are closer in space and time than
+#'   expected if space and time were independent (Knox 1964), and returns the
+#'   pairs of cases close in both (the space-time links that form the
+#'   transmission chains).
 #'
-#' @param x is the dataset with the coordinates and onset of symptoms
-#' @param crs is the coordinate reference system.
-#' @param dt is the temporal windows.
-#' @param ds is the spatial windows.
-#' @param sym is the MonteCarlo replications number.
-#' @param sp_link is the logical value. If sp_link is true the space-time link is  built with sp, else with sf.
-#' @param planar_coord is the logical value.if planar_coord is false, the dataset is projected to a planar system.
-#' @return a list with three elements: knox, st_link, space-time link.
-#'      - *knox* is a list with three elements:
-#'      \item{knox}{Knox statistic, which is the number of pairs of points found in a given space-time distance.}
-#'      \item{p_value}{p-value calculated from MonteCarlo simulation.}
-#'      \item{RR}{Relative Risk - calculated by observed value (Knox statistics) divided by mean of simulated values.}
-#'      - *st_link* is a origen-destination dataset of class dataframe. This dataset has four variables:
-#'      \item{Xo}{is the longitude of the point of origin.}
-#'      \item{Yo}{are the latitud of the point of origin.}
-#'      \item{Xd}{are the longitude of the destination point.}
-#'      \item{Yd}{are the latitud of the destination point.}
-#'      - *space-time link* is a sf object (LINESTRING) with crs 4326.
+#' @param x a data frame with the coordinates of the cases (`x`, `y`) and the
+#'   date of onset of symptoms (`onset`, a `Date` or a number).
+#' @param crs the projected coordinate reference system used to measure the
+#'   distances (for example `"+proj=eqc"`, in metres).
+#' @param dt the time window: two cases are close in time when their onsets
+#'   are at most `dt` apart (days if `onset` is a `Date`).
+#' @param ds the space window: two cases are close in space when they are at
+#'   most `ds` apart (units of `crs`, or of the coordinates if
+#'   `planar_coord = TRUE`).
+#' @param sym the number of Monte Carlo permutations.
+#' @param sp_link logical. If `TRUE` the space-time links are built with sp,
+#'   else with sf.
+#' @param planar_coord logical. If `FALSE`, `x` and `y` are longitude and
+#'   latitude (EPSG:4326) and are projected to `crs`; if `TRUE`, they are
+#'   already planar coordinates.
+#' @return A list with four elements:
+#'   - `knox`, a list with the test:
+#'     \describe{
+#'       \item{knox}{Knox statistic: number of pairs of cases close in space and time.}
+#'       \item{p_value}{Monte Carlo p-value, \eqn{(m + 1)/(sym + 1)}, where \eqn{m} is
+#'         the number of permutations of the onsets with at least `knox` pairs.}
+#'       \item{RR}{observed pairs divided by the mean of the permutations.}
+#'       \item{expected}{expected pairs, `pairs_space * pairs_time / pairs` (Knox 1964; Tango 2010).}
+#'       \item{RR_expected}{observed pairs divided by `expected`.}
+#'       \item{p_poisson}{Poisson mid-p-value of `knox` with mean `expected`, as in Tango (2010).}
+#'       \item{pairs}{total number of pairs of cases, \eqn{n(n - 1)/2}.}
+#'       \item{pairs_space}{pairs of cases close in space.}
+#'       \item{pairs_time}{pairs of cases close in time.}
+#'     }
+#'   - `st_link`, a data frame with one row per space-time link and the
+#'     coordinates of its two cases (`Xo`, `Yo`, `Xd`, `Yd`).
+#'   - `x`, the cases with the planar coordinates.
+#'   - `space_time_link`, an sf object (LINESTRING, EPSG:4326) with the
+#'     space-time links.
 #' @export
 #' @author Felipe Antonio Dzul Manzanilla \email{felipe.dzul.m@gmail.com}
-#' @seealso \link[knox]{knox_mc}, \link[knox]{st_link}, \link[knox]{knox}
-#' @references \strong{Knox, E. (1964)}. \emph{The detection of space-time interactions.} Journal of the Royal Statistical Society. Series C (13(1), 25-30.
-#' \strong{Tango, T. (2010)}. \emph{Statistical methods for disease clustering. Springer.}
-#' @details This function implements the space-time analysis with the knox test. x is a dataframe with three variables: x (longitude), y (latitude) and onset (onset of symptoms)
-#'      The coordinates should be projected to a planar system.
-#'      The function rknox test use the (knox)[https://github.com/thanhleviet/knox] package of (github)[https://github.com/].
+#' @seealso [kaposi_uganda] for the example of Tango (2010), and
+#'   [transmission_chains_map()].
+#' @references Knox EG (1964). The detection of space-time interactions.
+#'   *Journal of the Royal Statistical Society, Series C*, 13(1), 25-30.
 #'
+#'   Tango T (2010). *Statistical Methods for Disease Clustering*. Springer.
+#' @details Two cases are close in space when their distance is at most `ds`,
+#'   and close in time when their onsets are at most `dt` apart, as in the
+#'   tables of Tango (2010). The test gives two p-values: the Monte Carlo
+#'   p-value (the onsets are permuted among the cases `sym` times), and the
+#'   Poisson mid-p-value used by Knox (1964) and Tango (2010), which is an
+#'   approximation that can be misleading when the expected number of pairs is
+#'   not small (Barton and David 1966).
+#' @examples
+#' # Kaposi's sarcoma in Uganda (Tango 2010, Table 7.7): 5 km and same year
+#' k <- knox_test(x = kaposi_uganda, crs = NULL, ds = 5, dt = 0, sym = 999,
+#'                sp_link = FALSE, planar_coord = TRUE)
+#' k$knox
 knox_test <- function(x, crs, dt, ds, sym, sp_link, planar_coord){
-    rlang::check_installed(c("knox", "sp"), reason = "to use `knox_test()`.")
-    # step 1. transform dataframe to sf object ####
+    # step 1. project the coordinates ####
     if(planar_coord == FALSE){
         x <- x |>
             sf::st_as_sf(coords = c("x", "y"),
@@ -42,71 +71,89 @@ knox_test <- function(x, crs, dt, ds, sym, sp_link, planar_coord){
             sf::st_drop_geometry()
     }
 
-    # step 2. apply the knox test with the Montecarlo ####
+    # step 2. Knox test (Monte Carlo and Poisson) ####
     set.seed(123456)
-    knox <- knox::knox_mc(x = x$x,
-                          y = x$y,
-                          time = x$onset,
-                          sigma = ds,
-                          tau = dt,
-                          perm = sym)
-    # step 3. generate the origen-destination dataset ####
-    st_link <- knox::st_link(x = x$x,
-                             y = x$y,
-                             time = x$onset,
-                             ds = ds,
-                             dt = dt)
+    res <- .knox_core(x = x$x, y = x$y, time = x$onset,
+                      ds = ds, dt = dt, sym = sym)
+    knox <- res$stat
+
+    # step 3. the origin-destination dataset of the space-time links ####
+    st_link <- data.frame(Xo = x$x[res$i], Yo = x$y[res$i],
+                          Xd = x$x[res$j], Yd = x$y[res$j])
 
     # step 4. built the space-time link ####
-    if(sp_link == TRUE){
+    if(is.null(crs)){
+        space_time_link <- NULL
+    } else if(sp_link == TRUE){
+        rlang::check_installed("sp", reason = "to use `sp_link = TRUE`.")
         l <- list()
-        for (i in 1:nrow(st_link)) {
+        for (i in seq_len(nrow(st_link))) {
             l[[i]] <- with(st_link[i,],sp::Lines(sp::Line(cbind(c(Xo,Xd),
                                                                 c(Yo,Yd))),
                                                  ID = i))
         }
-        id <- data.frame(id = c(1:nrow(st_link)))
+        id <- data.frame(id = seq_len(nrow(st_link)))
         shape <- sp::SpatialLines(l)
         shape.line.df <- sp::SpatialLinesDataFrame(shape,id,match.ID = TRUE)
-
-
         space_time_link <- sf::st_as_sf(shape.line.df) |>
             sf::st_set_crs(crs) |>
             sf::st_transform(crs = 4326)
     } else{
-        linestring_od_point <- function(x) {
-            w <- sf::st_sfc(sf::st_point(c(x$Xo, x$Yo)))
-            z <- sf::st_sfc(sf::st_point(c(x$Xd, x$Yd)))
-            sf::st_combine(c(w,z)) |>
-                sf::st_cast("LINESTRING") |>
-                sf::st_sfc() |>
-                sf::st_as_sf(crs = crs)
-        }
-
-        ###
-        space_time_link <- st_link |>
-            dplyr::mutate(id = 1:dplyr::n()) |>
-            dplyr::group_by(id ) |>
-            tidyr::nest() |>
-            dplyr::mutate(linestring = purrr::map(data,linestring_od_point)) |>
-            dplyr::select(-data) |>
-            tidyr::unnest(cols = c(linestring)) |>
-            as.data.frame() |>
-            sf::st_set_geometry(value = "x") |>
-            sf::st_set_crs(crs) |>
+        lines <- lapply(seq_len(nrow(st_link)), function(k) {
+            sf::st_linestring(matrix(c(st_link$Xo[k], st_link$Xd[k],
+                                       st_link$Yo[k], st_link$Yd[k]), ncol = 2))
+        })
+        space_time_link <- sf::st_sf(id = seq_len(nrow(st_link)),
+                                     x = sf::st_sfc(lines, crs = crs)) |>
             sf::st_transform(4326)
     }
 
+    # step 5. return the knox test, o-d dataset and space-time link ####
+    list("knox" = knox,
+         "st_link" = st_link,
+         "x" = x,
+         "space_time_link" = space_time_link)
+}
 
-    ## Step 5. return the knos test, o-d dataset and space-time link ####
-    multi_return <- function() {
-        my_list <- list("knox" = knox,
-                        "st_link" = st_link,
-                        "x" = x,
-                        "space_time_link" = space_time_link)
-        return(my_list)
-    }
-    multi_return()
+# Knox statistic, Monte Carlo and Poisson p-values, and the pairs of cases
+# close in space and time. Only the pairs close in space are kept (a spatial
+# index finds them), so the permutations do not need the n x n matrices.
+.knox_core <- function(x, y, time, ds, dt, sym) {
+    time <- as.numeric(time)
+    n <- length(time)
+    pts <- sf::st_as_sf(data.frame(x = x, y = y), coords = c("x", "y"))
+    nb <- sf::st_is_within_distance(pts, pts, dist = ds)
+    i <- rep(seq_len(n), lengths(nb))
+    j <- unlist(nb, use.names = FALSE)
+    keep <- i < j
+    i <- i[keep]
+    j <- j[keep]
+
+    pairs <- n * (n - 1) / 2
+    pairs_space <- length(i)
+    ts <- sort(time)
+    pairs_time <- (sum(findInterval(ts + dt, ts) -
+                           findInterval(ts - dt, ts, left.open = TRUE)) - n) / 2
+
+    close <- abs(time[i] - time[j]) <= dt
+    obs <- sum(close)
+    sims <- vapply(seq_len(sym), function(k) {
+        tp <- sample(time)
+        sum(abs(tp[i] - tp[j]) <= dt)
+    }, numeric(1))
+    expected <- pairs_space * pairs_time / pairs
+
+    list(stat = list(knox = obs,
+                     p_value = (sum(sims >= obs) + 1) / (sym + 1),
+                     RR = obs / mean(sims),
+                     expected = expected,
+                     RR_expected = obs / expected,
+                     p_poisson = stats::ppois(obs, expected, lower.tail = FALSE) +
+                         0.5 * stats::dpois(obs, expected),
+                     pairs = pairs,
+                     pairs_space = pairs_space,
+                     pairs_time = pairs_time),
+         i = i[close], j = j[close])
 }
 
 

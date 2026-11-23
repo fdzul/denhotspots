@@ -6,6 +6,7 @@ reference:
     desc: Simulated geocoded dengue cases to run the examples and articles.
     contents:
       - sim_dengue
+      - kaposi_uganda
   - title: Data preparation
     desc: Read the dengue dataset, geocode the cases and count them by spatial unit.
     contents:
@@ -52,8 +53,10 @@ articles:
     contents:
       - hotspots_analysis_en
       - knox_test_en
+      - knox_tango_en
   - title: Español
     navbar: Español
     contents:
       - hotspots_analysis_es
       - knox_test_es
+      - knox_tango_es

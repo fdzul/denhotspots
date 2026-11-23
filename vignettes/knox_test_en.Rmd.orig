@@ -56,7 +56,7 @@ res <- knox_test(x = x, crs = "+proj=eqc", dt = 20, ds = 400, sym = 1000,
 ```
 
 ```{r knox-run, include = FALSE}
-# slow: computed once and kept in knox-2024.rds, which the
+# computed once and kept in knox-2024.rds, which the
 # interactive map below also reads when the site is built
 if (file.exists("knox-2024.rds")) {
     res <- readRDS("knox-2024.rds")
@@ -73,11 +73,19 @@ res$knox
 
 - `knox`: number of pairs of cases close in space and time (space-time
   links);
-- `p_value`: proportion of the permutations with at least as many pairs;
-- `RR`: ratio between the observed and the expected number of pairs.
+- `p_value`: Monte Carlo p-value, the proportion of the permutations of the
+  onsets (plus the observed one) with at least as many pairs;
+- `RR`: observed pairs divided by the mean of the permutations;
+- `expected`: expected pairs if space and time were independent,
+  `pairs_space * pairs_time / pairs` (Knox 1964);
+- `RR_expected`: observed pairs divided by `expected`;
+- `p_poisson`: Poisson mid-p-value, the one used by Tango (2010);
+- `pairs`, `pairs_space`, `pairs_time`: all the pairs of cases, and those
+  close in space and in time.
 
-A small `p_value` (and `RR` > 1) means space-time interaction: local
-transmission.
+A small p-value (and `RR` > 1) means space-time interaction: local
+transmission. The article [Knox test: validation with the data of
+Tango](knox_tango_en.html) checks these numbers against a published example.
 
 ## 3. Map of the transmission chains
 
@@ -157,7 +165,8 @@ by_year <- lapply(2019:2024, function(y) {
     k <- knox_test(x = d, crs = "+proj=eqc", dt = 20, ds = 400, sym = 999,
                    sp_link = FALSE, planar_coord = FALSE)$knox
     data.frame(year = y, cases = nrow(d), links = k$knox,
-               RR = round(k$RR, 2), p_value = k$p_value)
+               expected = round(k$expected, 1), RR = round(k$RR, 2),
+               p_value = k$p_value, p_poisson = signif(k$p_poisson, 3))
 })
 do.call(rbind, by_year)
 ```
@@ -172,7 +181,8 @@ if (file.exists("knox-seasons.rds")) {
         k <- knox_test(x = d, crs = "+proj=eqc", dt = 20, ds = 400, sym = 999,
                        sp_link = FALSE, planar_coord = FALSE)$knox
         data.frame(year = y, cases = nrow(d), links = k$knox,
-                   RR = round(k$RR, 2), p_value = k$p_value)
+                   expected = round(k$expected, 1), RR = round(k$RR, 2),
+                   p_value = k$p_value, p_poisson = signif(k$p_poisson, 3))
     })
     seasons <- do.call(rbind, by_year)
     saveRDS(seasons, "knox-seasons.rds")

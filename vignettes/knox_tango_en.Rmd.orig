@@ -1,0 +1,146 @@
+---
+title: "Knox test: validation with the data of Tango"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Knox test: validation with the data of Tango}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "tango-",
+                      fig.width = 6, fig.height = 6, dpi = 96, out.width = "80%",
+                      message = FALSE, warning = FALSE)
+```
+
+This article checks `knox_test()` against a published example: the 22
+patients with Kaposi's sarcoma in the West Nile district of Uganda
+(1958-1974) of chapter 7 of Tango (2010), *Statistical Methods for Disease
+Clustering*. Tango applies the Knox test with five space limits (1 to 5 km)
+and five time limits (0 to 4 years) and gives, for each pair of limits, the
+number of pairs close in space and time, its expected value and the Poisson
+mid-p-value (his Table 7.7).
+
+```{r setup}
+library(denhotspots)
+library(ggplot2)
+```
+
+## 1. The data
+
+`kaposi_uganda` has the grid coordinates of the homes (km) and the year of
+onset (Tango 2010, Table 7.1):
+
+```{r data}
+head(kaposi_uganda)
+```
+
+```{r map, fig.cap = "Homes of the 22 patients, coloured by year of onset."}
+ggplot(kaposi_uganda, aes(x, y, colour = onset)) +
+    geom_point(size = 3) +
+    scale_colour_viridis_c(name = "Onset") +
+    coord_equal() +
+    labs(x = "Eastings (km)", y = "Northings (km)") +
+    theme_minimal()
+```
+
+## 2. One Knox test
+
+The coordinates are already planar (km), so `planar_coord = TRUE` and `ds` is
+in km; the onset is the year, so `dt = 0` means "the same year". With
+`crs = NULL` the function does not build the map of the links.
+
+```{r one}
+k <- knox_test(x = kaposi_uganda, crs = NULL, ds = 2, dt = 0, sym = 9999,
+               sp_link = FALSE, planar_coord = TRUE)
+k$knox
+```
+
+Of the 231 pairs of patients, 5 live within 2 km of each other and 15 had
+their onset in the same year; 2 pairs are close in both. If space and time
+were independent, `5 * 15 / 231 = 0.325` pairs would be expected. The
+function gives the two p-values: the Poisson mid-p-value used by Tango and
+the Monte Carlo p-value (9,999 permutations of the years among the patients).
+
+## 3. Table 7.7 of Tango
+
+The 25 tests:
+
+```{r grid}
+grid <- expand.grid(ds = 1:5, dt = 0:4)
+tests <- lapply(seq_len(nrow(grid)), function(i) {
+    knox_test(x = kaposi_uganda, crs = NULL, ds = grid$ds[i], dt = grid$dt[i],
+              sym = 9999, sp_link = FALSE, planar_coord = TRUE)$knox
+})
+grid$pairs <- sapply(tests, `[[`, "knox")
+grid$expected <- sapply(tests, `[[`, "expected")
+grid$p_poisson <- sapply(tests, `[[`, "p_poisson")
+grid$p_value <- sapply(tests, `[[`, "p_value")
+
+as_table <- function(v, digits) {
+    m <- matrix(round(grid[[v]], digits), nrow = 5,
+                dimnames = list(paste0("<= ", 1:5, " km"),
+                                c("0", paste0("<= ", 1:4))))
+    knitr::kable(m)
+}
+```
+
+Pairs close in space and time (rows: space limit; columns: time limit in
+years):
+
+```{r t-pairs, echo = FALSE}
+as_table("pairs", 0)
+```
+
+Expected pairs:
+
+```{r t-expected, echo = FALSE}
+as_table("expected", 3)
+```
+
+Poisson mid-p-value:
+
+```{r t-midp, echo = FALSE}
+as_table("p_poisson", 3)
+```
+
+Monte Carlo p-value (9,999 permutations):
+
+```{r t-mc, echo = FALSE}
+as_table("p_value", 3)
+```
+
+## 4. Comparison with Tango
+
+- **Pairs and expected values**: the 25 cells are identical to Table 7.7
+  (2.810 and 2.809 differ only in the rounding).
+  Note that, although the text of Tango defines "close" with `<`, his table
+  uses `<=` (the pairs close in time are 15, 31, 59, 73 and 96 for 0, `<= 1`,
+  ..., `<= 4` years), as `knox_test()` does.
+- **Poisson mid-p-value**: 22 of the 25 cells agree to the third decimal. In
+  the row of 1 km, Table 7.7 repeats for 2, 3 and 4 years the values of the
+  row of 2 km (0.251, 0.259, 0.645); with 1 pair and the expected values of
+  his own table (1.022, 1.264, 1.662), the mid-p-values are 0.456, 0.539 and
+  0.653. In the cell 5 km and 0 years the book gives 0.138 and the expected
+  value 0.844 gives 0.131.
+- **Monte Carlo vs Poisson**: the Monte Carlo p-values are larger than the
+  mid-p-values (for 2 km and the same year, 0.028 vs 0.024). The Poisson
+  approximation treats the pairs as independent, which they are not, and can
+  be misleading (Barton and David 1966); the Monte Carlo p-value is the
+  reference, above all with many cases, as in dengue.
+
+The smallest p-value is that of 2-3 km and the same year (2 pairs, 0.325
+expected, mid-p = 0.024): the patients could be clustered in space and time,
+but after the 25 tests the evidence is weak; the Max test of Baker (1996),
+which adjusts for the multiple limits, gives p = 0.106 (Tango 2010).
+
+The unit tests of the package (`tests/testthat/test-knox.R`) check these
+numbers every time the package is built.
+
+## References
+
+- Knox EG (1964). The detection of space-time interactions. *Journal of the
+  Royal Statistical Society, Series C*, 13(1), 25-30.
+- Tango T (2010). *Statistical Methods for Disease Clustering*. Springer.
+  Chapter 7; the data of McHardy et al. (1984) and the results of Barton and
+  David (1966) and Baker (1996) are cited from this book.

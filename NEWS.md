@@ -1,5 +1,14 @@
 # denhotspots (development version)
 
+* `knox_test()` now computes the Knox test itself (with a spatial index, much
+  faster) and no longer depends on the knox package. The Monte Carlo
+  `p_value` is now `(m + 1) / (sym + 1)` (before it could be 0), and the
+  result also gives the expected number of pairs (`expected`, `RR_expected`),
+  the Poisson mid-p-value of Tango (2010) (`p_poisson`) and the number of
+  pairs (`pairs`, `pairs_space`, `pairs_time`).
+* New `kaposi_uganda`: the example of Tango (2010, Table 7.1). `knox_test()`
+  reproduces his Table 7.7 (unit tests and a new article in English and
+  Spanish).
 * `knox()` is now `knox_test()`, so it does not mask `knox::knox()`; `knox()` still works but is deprecated.
 * Removed `sf_joint_cov()` (COVID-19 data, outside the scope of the package).
 * New `sim_dengue`: simulated geocoded dengue cases of the metropolitan area of Guadalajara.
