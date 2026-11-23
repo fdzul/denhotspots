@@ -45,3 +45,15 @@ reference:
       - risk_ageb
       - risk_h3
       - map_risk
+
+articles:
+  - title: English
+    navbar: English
+    contents:
+      - hotspots_analysis_en
+      - knox_test_en
+  - title: Español
+    navbar: Español
+    contents:
+      - hotspots_analysis_es
+      - knox_test_es
