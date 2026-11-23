@@ -2,6 +2,10 @@ url: https://fdzul.github.io/denhotspots/
 template:
   bootstrap: 5
 reference:
+  - title: Example data
+    desc: Simulated geocoded dengue cases to run the examples and articles.
+    contents:
+      - sim_dengue
   - title: Data preparation
     desc: Read the dengue dataset, geocode the cases and count them by spatial unit.
     contents:
