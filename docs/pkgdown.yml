@@ -1,5 +1,5 @@
-pandoc: 3.8.3
-pkgdown: 2.2.0
+pandoc: '0'
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   clusters_analysis: clusters_analysis.html
@@ -8,4 +8,4 @@ articles:
   hotspots_analysis: hotspots_analysis.html
   knox_test: knox_test.html
   lgcp_spatial: lgcp_spatial.html
-last_built: 2026-05-04T19:05Z
+last_built: 2026-11-23T03:46Z
