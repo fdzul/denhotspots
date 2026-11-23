@@ -1,0 +1,46 @@
+url: https://fdzul.github.io/denhotspots/
+template:
+  bootstrap: 5
+reference:
+  - title: Data preparation
+    desc: Read the dengue dataset, geocode the cases and count them by spatial unit.
+    contents:
+      - read_dengue_dataset
+      - read_den_dataset
+      - subset_den
+      - data_geocoden
+      - geocoden
+      - save_geocoden
+      - point_to_polygons
+      - cases_by_agem
+  - title: Hotspots
+    desc: Local spatial statistics Getis-Ord Gi* and Hi, and persistence of the hotspots.
+    contents:
+      - gihi
+      - power_law_plot
+      - power_laws
+      - bivariate_map
+  - title: Space-time analysis
+    desc: Knox test, space-time links, transmission chains and SaTScan.
+    contents:
+      - knox
+      - space_time_link_map
+      - staticmap_knoxs
+      - transmission_chains_map
+      - satscanR
+      - staticmap_satscan
+  - title: Intensity of cases
+    desc: Spatial log-Gaussian Cox process models with INLA.
+    contents:
+      - spatial_lgcp
+      - intensity_plot
+      - staticmap_intensity
+  - title: Risk of transmission
+    desc: Hotspots of cases and of eggs (deneggs) combined by AGEB or H3 hexagon.
+    contents:
+      - risk_ageb
+      - risk_h3
+      - map_risk
+  - title: Other
+    contents:
+      - sf_joint_cov

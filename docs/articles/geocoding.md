@@ -1,0 +1,5 @@
+# geocoding
+
+``` r
+library(denhotspots)
+```

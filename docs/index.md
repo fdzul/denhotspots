@@ -1,0 +1,178 @@
+# denhotspots
+
+**English** ·
+[Español](https://fdzul.github.io/denhotspots/README.es.md)
+
+## Overview
+
+denhotspots identifies where and when dengue is transmitted inside the
+cities of Mexico: persistent transmission hotspots, space-time clusters
+and transmission chains, and the intensity of cases.
+
+It counts geocoded cases by spatial unit (AGEB, H3 hexagons) and
+calculates the local spatial statistics Getis-Ord Gi\* and local spatial
+heteroscedasticity (Hi) year by year to find persistent hotspots; tests
+space-time interaction with the Knox test and maps the space-time links
+and the transmission chains; runs SaTScan space-time scan statistics;
+and fits spatial log-Gaussian Cox process models with INLA to map the
+intensity of cases. The hotspots and the intensity are combined with the
+entomological hotspots of [deneggs](https://fdzul.github.io/deneggs/)
+into risk maps by AGEB or H3 hexagon.
+
+denhotspots is part of the
+[**dengueverse**](https://fdzul.github.io/dengueverse/), a family of R
+packages for the surveillance, spatial analysis and control of dengue
+and other *Aedes*-borne diseases in Mexico.
+
+## Datasets
+
+| Dataset | Description | Source |
+|:---|:---|:---|
+| [`power_laws`](https://fdzul.github.io/denhotspots/reference/power_laws.html) | Theoretical power-law distributions | [link](https://www.tandfonline.com/doi/abs/10.1080/00207390802213609) |
+
+See the full description of each dataset with
+[`?name`](https://rdrr.io/r/base/name.html).
+
+## Main functions
+
+| Function | Description |
+|:---|:---|
+| [`bivariate_map()`](https://fdzul.github.io/denhotspots/reference/bivariate_map.html) | Bivariate choropleth map of two variables |
+| [`cases_by_agem()`](https://fdzul.github.io/denhotspots/reference/cases_by_agem.html) | Count the cases of a vector-borne disease by municipality |
+| [`data_geocoden()`](https://fdzul.github.io/denhotspots/reference/data_geocoden.html) | Prepare the addresses of the cases for geocoding |
+| [`geocoden()`](https://fdzul.github.io/denhotspots/reference/geocoden.html) | Geocode the addresses of the cases |
+| [`gihi()`](https://fdzul.github.io/denhotspots/reference/gihi.html) | Local spatial statistics Getis-Ord Gi\* and Hi by time period |
+| [`intensity_plot()`](https://fdzul.github.io/denhotspots/reference/intensity_plot.html) | Map of the intensity of cases |
+| [`knox()`](https://fdzul.github.io/denhotspots/reference/knox.html) | Knox test of space-time interaction |
+| [`map_risk()`](https://fdzul.github.io/denhotspots/reference/map_risk.html) | Map of the risk of transmission |
+| [`point_to_polygons()`](https://fdzul.github.io/denhotspots/reference/point_to_polygons.html) | Count the geocoded cases by spatial unit and time period |
+| [`power_law_plot()`](https://fdzul.github.io/denhotspots/reference/power_law_plot.html) | Plot of the power law of the hotspots |
+| [`read_den_dataset()`](https://fdzul.github.io/denhotspots/reference/read_den_dataset.html) | Read the dengue dataset for geocoding |
+| [`read_dengue_dataset()`](https://fdzul.github.io/denhotspots/reference/read_dengue_dataset.html) | Read the dengue dataset of SINAVE |
+| [`risk_ageb()`](https://fdzul.github.io/denhotspots/reference/risk_ageb.html) | Risk of transmission by AGEB |
+| [`risk_h3()`](https://fdzul.github.io/denhotspots/reference/risk_h3.html) | Risk of transmission by H3 hexagon |
+| [`satscanR()`](https://fdzul.github.io/denhotspots/reference/satscanR.html) | Run the SaTScan space-time scan statistic |
+| [`save_geocoden()`](https://fdzul.github.io/denhotspots/reference/save_geocoden.html) | Save the geocoded dataset |
+| [`sf_joint_cov()`](https://fdzul.github.io/denhotspots/reference/sf_joint_cov.html) | Join the COVID-19 cases with the municipal polygons |
+| [`space_time_link_map()`](https://fdzul.github.io/denhotspots/reference/space_time_link_map.html) | Map of the space-time links of the Knox test |
+| [`spatial_lgcp()`](https://fdzul.github.io/denhotspots/reference/spatial_lgcp.html) | Spatial log-Gaussian Cox process model with INLA |
+| [`staticmap_intensity()`](https://fdzul.github.io/denhotspots/reference/staticmap_intensity.html) | Static map of the intensity of cases |
+| [`staticmap_knoxs()`](https://fdzul.github.io/denhotspots/reference/staticmap_knoxs.html) | Static map of the space-time links of the Knox test |
+| [`staticmap_satscan()`](https://fdzul.github.io/denhotspots/reference/staticmap_satscan.html) | Static map of the SaTScan clusters |
+| [`subset_den()`](https://fdzul.github.io/denhotspots/reference/subset_den.html) | Subset the dengue dataset by state, municipality and locality |
+| [`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.html) | Map of the transmission chains |
+
+## Installation
+
+Install the released version from the [dengueverse
+R-universe](https://fdzul.r-universe.dev):
+
+``` r
+install.packages("denhotspots",
+                 repos = c("https://fdzul.r-universe.dev",
+                           "https://cloud.r-project.org"))
+```
+
+Or the development version from
+[GitHub](https://github.com/fdzul/denhotspots):
+
+``` r
+# install.packages("pak")
+pak::pak("fdzul/denhotspots")
+```
+
+## Example
+
+``` r
+library(denhotspots)
+
+# 1. cases by AGEB and year (cases: geocoded cases with year, long, lat)
+ageb <- rgeomex::extract_ageb(locality = "Guadalajara", cve_edo = "14")$ageb
+x <- point_to_polygons(x = cases, y = ageb, ids = "CVEGEO", time = year,
+                       coords = c("long", "lat"), crs = 4326, dis = "DENV")
+
+# 2. hotspots of transmission with Getis-Ord Gi*
+hotspots <- gihi(x = x, gi_hi = "gi", id = "CVEGEO", dis = "DENV",
+                 time = "year", alpha = 0.95)
+
+# 3. space-time interaction with the Knox test (20 days, 400 m)
+knox_res <- knox(x = cases_knox, crs = 4326, dt = 20, ds = 400, sym = 1000,
+                 sp_link = FALSE, planar_coord = FALSE)
+```
+
+Longer examples are in the
+[articles](https://fdzul.github.io/denhotspots/articles/) of the
+website.
+
+## How to cite
+
+If you use denhotspots in a publication, please cite it:
+
+``` R
+Dzul Manzanilla F, Correa-Morales F, Morales García E, Cruz López C,
+Gómez-Dantés H (2026). _denhotspots: Local Spatial Statistics and
+Space-Time Analysis of Dengue Hotspots_. R package version 0.2.0,
+<https://github.com/fdzul/denhotspots>.
+```
+
+## References
+
+- Getis A, Ord JK (1992). The analysis of spatial association by use of
+  distance statistics. *Geographical Analysis*, 24(3), 189-206.
+- Ord JK, Getis A (2012). Local spatial heteroscedasticity (LOSH). *The
+  Annals of Regional Science*, 48(2), 529-539.
+- Knox EG (1964). The detection of space-time interactions. *Journal of
+  the Royal Statistical Society C*, 13(1), 25-30.
+- Kulldorff M (1997). A spatial scan statistic. *Communications in
+  Statistics - Theory and Methods*, 26(6), 1481-1496.
+- Simpson D, Illian JB, Lindgren F, Sørbye SH, Rue H (2016). Going off
+  grid: computationally efficient inference for log-Gaussian Cox
+  processes. *Biometrika*, 103(1), 49-70.
+
+## Authors and contributors
+
+- Felipe Antonio Dzul Manzanilla
+  [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--2085--9141-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0000-0002-2085-9141)
+  (author, maintainer)
+- Fabián Correa-Morales
+  [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--6193--1242-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0000-0002-6193-1242)
+  (author)
+- Emmanuel Morales García
+  [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--6837--9227-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0000-0002-6837-9227)
+  (author)
+- Cecilia Cruz López
+  [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--9156--5669-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0000-0002-9156-5669)
+  (author)
+- Héctor Gómez-Dantés
+  [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--2025--3641-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0000-0002-2025-3641)
+  (author)
+
+## Acknowledgements
+
+This work was developed at the Instituto Nacional de Salud Pública
+(INSP), Mexico, in collaboration with the Centro Nacional de Programas
+Preventivos y Control de Enfermedades (CENAPRECE) of the Secretaría de
+Salud.
+
+## Motivation
+
+denhotspots was born from the need to support evidence-based decisions
+in the Vector-Borne Diseases (VBD) program of CENAPRECE of the
+Secretaría de Salud of Mexico: to focus the control of *Aedes aegypti*
+on the places where dengue is transmitted year after year.
+
+## Getting help
+
+- Bugs and feature requests: open an
+  [issue](https://github.com/fdzul/denhotspots/issues) with a minimal
+  reproducible example ([reprex](https://reprex.tidyverse.org)).
+- Questions: <felipe.dzul.m@gmail.com>
+
+## License
+
+MIT © 2026 Felipe Antonio Dzul Manzanilla. See
+[LICENSE.md](https://fdzul.github.io/denhotspots/LICENSE.md).
+
+Please note that this project is released with a [Contributor Code of
+Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html).
+By participating in this project you agree to abide by its terms.
