@@ -1,3 +1,9 @@
+# denhotspots (development version)
+
+* Removed `sf_joint_cov()` (COVID-19 data, outside the scope of the package).
+* New `sim_dengue`: simulated geocoded dengue cases of the metropolitan area of Guadalajara.
+* README with the dengueverse template (English and Spanish); titles for all the functions.
+
 # denhotspots 0.2.0
 
 ## Breaking changes

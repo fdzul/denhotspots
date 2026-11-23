@@ -45,6 +45,3 @@ reference:
       - risk_ageb
       - risk_h3
       - map_risk
-  - title: Other
-    contents:
-      - sf_joint_cov
