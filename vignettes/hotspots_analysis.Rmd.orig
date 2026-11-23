@@ -1,0 +1,116 @@
+---
+title: "Persistent transmission hotspots (Getis-Ord Gi*)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Persistent transmission hotspots (Getis-Ord Gi*)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "hotspots-",
+                      fig.width = 7, fig.height = 6, dpi = 96, out.width = "100%",
+                      message = FALSE, warning = FALSE)
+```
+
+A **transmission hotspot** is a spatial unit (here, an AGEB) with many more
+cases than expected, surrounded by units that also have many cases. When the
+same units are hotspots year after year, they are **persistent hotspots**: the
+places where dengue is transmitted every season and where vector control
+gives the largest return. This article finds them with the local statistic
+Getis-Ord Gi* (Getis & Ord 1992; Ord & Getis 1995), calculated year by year.
+
+The example uses `sim_dengue`, **simulated** geocoded cases of the
+metropolitan area of Guadalajara (2019-2024); with the real geocoded dataset
+the steps are the same.
+
+```{r setup}
+library(denhotspots)
+library(ggplot2)
+```
+
+## 1. The cases
+
+```{r cases}
+table(sim_dengue$ANO)
+```
+
+## 2. The AGEB of the metropolitan area
+
+The urban AGEB of Guadalajara, Zapopan, Tlaquepaque and Tonalá come from
+[rgeomex](https://fdzul.github.io/rgeomex/):
+
+```{r ageb}
+ageb <- rgeomex::extract_ageb(locality = c("Guadalajara", "Zapopan", "Tlaquepaque", "Tonalá"),
+                              cve_edo = "14")$ageb
+ageb <- ageb[, "CVEGEO"]
+nrow(ageb)
+```
+
+## 3. Cases by AGEB and year
+
+`point_to_polygons()` counts the cases of each AGEB in each year; the result
+has one column per year (`DENV_2019`, ..., `DENV_2024`).
+
+```{r count}
+x <- point_to_polygons(x = sim_dengue, y = ageb, ids = "CVEGEO", time = ANO,
+                       coords = c("long", "lat"), crs = 4326, dis = "DENV")
+head(sf::st_drop_geometry(x))
+```
+
+## 4. Hotspots with Getis-Ord Gi*
+
+`gihi()` calculates Gi* for each year with a queen-contiguity neighbourhood
+that includes the AGEB itself, and marks as hotspot the AGEB whose Gi* is
+above the Bonferroni-corrected critical value (`alpha = 0.95`). It returns,
+for each AGEB, the number of years it was a hotspot (`intensity_gi`) and
+whether it was a hotspot at least once (`hotspots_gi`).
+
+```{r gihi}
+hotspots <- gihi(x = x, gi_hi = "gi", id = "CVEGEO", dis = "DENV",
+                 time = "year", alpha = 0.95)
+table(hotspots$intensity_gi)
+```
+
+```{r map-intensity, fig.cap = "Number of years (2019-2024) that each AGEB was a hotspot."}
+ggplot(hotspots) +
+    geom_sf(aes(fill = factor(intensity_gi)), colour = "white", linewidth = 0.05) +
+    scale_fill_manual(values = c("0" = "grey90", "1" = "#FDDBC7", "2" = "#F4A582",
+                                 "3" = "#D6604D", "4" = "#B2182B", "5" = "#8C0D25",
+                                 "6" = "#67001F"),
+                      name = "Years as\nhotspot") +
+    theme_void()
+```
+
+The AGEB that were hotspots in most years are the persistent hotspots.
+
+## 5. How many cases are in the hotspots?
+
+A few AGEB concentrate a large share of the cases. Sorting the AGEB from more
+to fewer cases and accumulating, the curve shows the percentage of the cases
+(y) in a percentage of the AGEB (x); the dashed lines are theoretical power
+laws (`power_laws`).
+
+```{r pareto}
+cases <- rowSums(sf::st_drop_geometry(x)[, grep("^DENV_", names(x))], na.rm = TRUE)
+d <- data.frame(n = cases, hotspots_gi = hotspots$hotspots_gi, loc = "Guadalajara")
+d <- d[order(-d$n), ]
+d$id_perc_cum <- seq_len(nrow(d)) / nrow(d) * 100
+d$perc_cumsum_n <- cumsum(d$n) / sum(d$n) * 100
+
+# share of the cases in the hotspots, and share of the AGEB they are
+round(100 * c(cases = sum(d$n[d$hotspots_gi == 1]) / sum(d$n),
+              ageb = mean(d$hotspots_gi == 1)), 1)
+```
+
+```{r power-law, fig.height = 4.5, fig.cap = "Cumulative percentage of cases by percentage of AGEB."}
+power_law_plot(d)
+```
+
+## References
+
+- Getis A, Ord JK (1992). The analysis of spatial association by use of
+  distance statistics. *Geographical Analysis*, 24(3), 189-206.
+- Ord JK, Getis A (1995). Local spatial autocorrelation statistics:
+  distributional issues and an application. *Geographical Analysis*, 27(4),
+  286-306.

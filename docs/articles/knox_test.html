@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>knox_test • denhotspots</title>
+<title>Space-time interaction: Knox test and transmission chains • denhotspots</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="knox_test">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Space-time interaction: Knox test and transmission chains">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -41,8 +41,8 @@
 <li><a class="dropdown-item" href="../articles/clusters_analysis.html">clusters_analysis</a></li>
     <li><a class="dropdown-item" href="../articles/count_cases_by_polygons.html">count_cases_by_polygons</a></li>
     <li><a class="dropdown-item" href="../articles/geocoding.html">geocoding</a></li>
-    <li><a class="dropdown-item" href="../articles/hotspots_analysis.html">hotspots_analysis</a></li>
-    <li><a class="dropdown-item" href="../articles/knox_test.html">knox_test</a></li>
+    <li><a class="dropdown-item" href="../articles/hotspots_analysis.html">Persistent transmission hotspots (Getis-Ord Gi*)</a></li>
+    <li><a class="dropdown-item" href="../articles/knox_test.html">Space-time interaction: Knox test and transmission chains</a></li>
     <li><a class="dropdown-item" href="../articles/lgcp_spatial.html">lgcp_spatial</a></li>
   </ul>
 </li>
@@ -65,7 +65,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>knox_test</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Space-time interaction: Knox test and transmission chains</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/fdzul/denhotspots/blob/HEAD/vignettes/knox_test.Rmd" class="external-link"><code>vignettes/knox_test.Rmd</code></a></small>
@@ -74,9 +74,142 @@
 
     
     
+<p>Dengue is transmitted by <em>Aedes aegypti</em>, which flies short
+distances, and the virus takes days (the extrinsic and intrinsic
+incubation periods) to pass from one person to the next. So, when there
+is local transmission, cases are <strong>closer in space and
+time</strong> than expected if space and time were independent. The
+<strong>Knox test</strong> (Knox 1964) counts the pairs of cases that
+are close in both space (less than <code>ds</code> metres) and time
+(less than <code>dt</code> days) and compares that number with its
+distribution when the dates are permuted at random (Monte Carlo). Each
+close pair is a <strong>space-time link</strong>, and the linked cases
+form the <strong>transmission chains</strong>.</p>
+<p>The example uses <code>sim_dengue</code>, <strong>simulated</strong>
+geocoded cases of the metropolitan area of Guadalajara; with the real
+geocoded dataset the steps are the same.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/fdzul/denhotspots" class="external-link">denhotspots</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/fdzul/denhotspots" class="external-link">denhotspots</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="the-cases-of-a-season">1. The cases of a season<a class="anchor" aria-label="anchor" href="#the-cases-of-a-season"></a>
+</h2>
+<p><code><a href="../reference/knox_test.html">knox_test()</a></code> needs a table with the coordinates
+(<code>x</code>, <code>y</code>) and the date of onset of symptoms
+(<code>onset</code>):</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">sim_dengue</span>, <span class="va">ANO</span> <span class="op">==</span> <span class="fl">2024</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">long</span>, y <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">lat</span>, onset <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">FEC_INI_SIGNOS_SINT</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1680</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="knox-test">2. Knox test<a class="anchor" aria-label="anchor" href="#knox-test"></a>
+</h2>
+<p>The windows are 400 m (the flight range of <em>Ae. aegypti</em> plus
+the movement of people around the house) and 20 days (the time between
+two cases of the same chain); the coordinates are projected
+(<code>crs = "+proj=eqc"</code>, metres) and the test uses 1,000
+permutations.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knox_test.html">knox_test</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, crs <span class="op">=</span> <span class="st">"+proj=eqc"</span>, dt <span class="op">=</span> <span class="fl">20</span>, ds <span class="op">=</span> <span class="fl">400</span>, sym <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>                 sp_link <span class="op">=</span> <span class="cn">FALSE</span>, planar_coord <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">res</span><span class="op">$</span><span class="va">knox</span></span>
+<span><span class="co">#&gt; $knox</span></span>
+<span><span class="co">#&gt; [1] 3875</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $p_value</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $RR</span></span>
+<span><span class="co">#&gt; [1] 1.148744</span></span></code></pre></div>
+<ul>
+<li>
+<code>knox</code>: number of pairs of cases close in space and time
+(space-time links);</li>
+<li>
+<code>p_value</code>: proportion of the permutations with at least
+as many pairs;</li>
+<li>
+<code>RR</code>: ratio between the observed and the expected number
+of pairs.</li>
+</ul>
+<p>A small <code>p_value</code> (and <code>RR</code> &gt; 1) means
+space-time interaction: local transmission.</p>
+</div>
+<div class="section level2">
+<h2 id="map-of-the-transmission-chains">3. Map of the transmission chains<a class="anchor" aria-label="anchor" href="#map-of-the-transmission-chains"></a>
+</h2>
+<p><code>res$space_time_link</code> has one line per link (EPSG:4326)
+and <code>res$x</code> the cases (in the projected coordinates). The map
+shows the links coloured by the epidemiological week of the cases, as
+<code><a href="../reference/transmission_chains_map.html">transmission_chains_map()</a></code> does in an interactive map.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cases</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">x</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="st">"+proj=eqc"</span><span class="op">)</span></span>
+<span><span class="va">cases</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">cases</span>, <span class="fl">4326</span><span class="op">)</span></span>
+<span><span class="va">cases</span><span class="op">$</span><span class="va">week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/week.html" class="external-link">epiweek</a></span><span class="op">(</span><span class="va">cases</span><span class="op">$</span><span class="va">onset</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">25</span>, <span class="fl">30</span>, <span class="fl">35</span>, <span class="fl">40</span>, <span class="fl">45</span>, <span class="fl">53</span><span class="op">)</span>,</span>
+<span>                  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1-25"</span>, <span class="st">"26-30"</span>, <span class="st">"31-35"</span>, <span class="st">"36-40"</span>, <span class="st">"41-45"</span>, <span class="st">"46-53"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">linked</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html" class="external-link">st_intersects</a></span><span class="op">(</span><span class="va">cases</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">space_time_link</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
+<span></span>
+<span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="fu">rgeomex</span><span class="fu">::</span><span class="fu"><a href="https://fdzul.github.io/rgeomex/reference/extract_locality.html" class="external-link">extract_locality</a></span><span class="op">(</span>cve_edo <span class="op">=</span> <span class="st">"14"</span>,</span>
+<span>                                 locality <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Guadalajara"</span>, <span class="st">"Zapopan"</span>, <span class="st">"Tlaquepaque"</span>, <span class="st">"Tonalá"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#2166AC"</span>, <span class="st">"#1B9E77"</span>, <span class="st">"#A6D854"</span>, <span class="st">"#F2B134"</span>, <span class="st">"#E6550D"</span>, <span class="st">"#B2182B"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">loc</span>, fill <span class="op">=</span> <span class="st">"grey93"</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cases</span><span class="op">[</span><span class="op">!</span><span class="va">linked</span>, <span class="op">]</span>, colour <span class="op">=</span> <span class="st">"grey55"</span>, size <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">space_time_link</span>, colour <span class="op">=</span> <span class="st">"grey40"</span>, linewidth <span class="op">=</span> <span class="fl">0.25</span>, alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cases</span><span class="op">[</span><span class="va">linked</span>, <span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">week</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">pal</span>, name <span class="op">=</span> <span class="st">"Week"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="knox-chains-1.png" alt="Space-time links (400 m, 20 days) of the cases of 2024." width="100%"><p class="caption">
+Space-time links (400 m, 20 days) of the cases of 2024.
+</p>
+</div>
+<p>The linked cases (in colour) form the chains; the grey points are
+cases without a link. With the real data,
+<code><a href="../reference/transmission_chains_map.html">transmission_chains_map()</a></code> makes this map interactive
+directly from the geocoded dataset:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/transmission_chains_map.html">transmission_chains_map</a></span><span class="op">(</span>geocoded_dataset <span class="op">=</span> <span class="va">sim_dengue</span>,</span>
+<span>                        cve_edo <span class="op">=</span> <span class="st">"14"</span>, locality <span class="op">=</span> <span class="st">"Guadalajara"</span>,</span>
+<span>                        dengue_cases <span class="op">=</span> <span class="st">"Probable"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="the-chains-by-season">4. The chains by season<a class="anchor" aria-label="anchor" href="#the-chains-by-season"></a>
+</h2>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">by_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">2019</span><span class="op">:</span><span class="fl">2024</span>, <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">sim_dengue</span>, <span class="va">ANO</span> <span class="op">==</span> <span class="va">y</span><span class="op">)</span></span>
+<span>    <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">d</span><span class="op">$</span><span class="va">long</span>, y <span class="op">=</span> <span class="va">d</span><span class="op">$</span><span class="va">lat</span>, onset <span class="op">=</span> <span class="va">d</span><span class="op">$</span><span class="va">FEC_INI_SIGNOS_SINT</span><span class="op">)</span></span>
+<span>    <span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knox_test.html">knox_test</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">d</span>, crs <span class="op">=</span> <span class="st">"+proj=eqc"</span>, dt <span class="op">=</span> <span class="fl">20</span>, ds <span class="op">=</span> <span class="fl">400</span>, sym <span class="op">=</span> <span class="fl">999</span>,</span>
+<span>                   sp_link <span class="op">=</span> <span class="cn">FALSE</span>, planar_coord <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">knox</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>year <span class="op">=</span> <span class="va">y</span>, cases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>, links <span class="op">=</span> <span class="va">k</span><span class="op">$</span><span class="va">knox</span>,</span>
+<span>               RR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">k</span><span class="op">$</span><span class="va">RR</span>, <span class="fl">2</span><span class="op">)</span>, p_value <span class="op">=</span> <span class="va">k</span><span class="op">$</span><span class="va">p_value</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">by_year</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   year cases links   RR p_value</span></span>
+<span><span class="co">#&gt; 1 2019  1413  2370 1.17       0</span></span>
+<span><span class="co">#&gt; 2 2020   414   318 1.40       0</span></span>
+<span><span class="co">#&gt; 3 2021   259   257 1.72       0</span></span>
+<span><span class="co">#&gt; 4 2022   597   624 1.33       0</span></span>
+<span><span class="co">#&gt; 5 2023  1139  1665 1.27       0</span></span>
+<span><span class="co">#&gt; 6 2024  1680  3875 1.15       0</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<ul>
+<li>Knox EG (1964). The detection of space-time interactions.
+<em>Journal of the Royal Statistical Society, Series C</em>, 13(1),
+25-30.</li>
+<li>Tango T (2010). <em>Statistical Methods for Disease Clustering</em>.
+Springer.</li>
+</ul>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

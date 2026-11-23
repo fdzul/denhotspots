@@ -1,5 +1,13 @@
 # Package index
 
+## Example data
+
+Simulated geocoded dengue cases to run the examples and articles.
+
+- [`sim_dengue`](https://fdzul.github.io/denhotspots/reference/sim_dengue.md)
+  : Simulated geocoded dengue cases of the metropolitan area of
+  Guadalajara
+
 ## Data preparation
 
 Read the dengue dataset, geocode the cases and count them by spatial
@@ -40,8 +48,9 @@ hotspots.
 
 Knox test, space-time links, transmission chains and SaTScan.
 
-- [`knox()`](https://fdzul.github.io/denhotspots/reference/knox.md) :
-  Knox test of space-time interaction
+- [`knox_test()`](https://fdzul.github.io/denhotspots/reference/knox_test.md)
+  [`knox()`](https://fdzul.github.io/denhotspots/reference/knox_test.md)
+  : Knox test of space-time interaction
 - [`space_time_link_map()`](https://fdzul.github.io/denhotspots/reference/space_time_link_map.md)
   : Map of the space-time links of the Knox test
 - [`staticmap_knoxs()`](https://fdzul.github.io/denhotspots/reference/staticmap_knoxs.md)
@@ -74,8 +83,3 @@ Hotspots of cases and of eggs (deneggs) combined by AGEB or H3 hexagon.
   : Risk of transmission by H3 hexagon
 - [`map_risk()`](https://fdzul.github.io/denhotspots/reference/map_risk.md)
   : Map of the risk of transmission
-
-## Other
-
-- [`sf_joint_cov()`](https://fdzul.github.io/denhotspots/reference/sf_joint_cov.md)
-  : Join the COVID-19 cases with the municipal polygons

@@ -1,5 +1,135 @@
-# knox_test
+# Space-time interaction: Knox test and transmission chains
+
+Dengue is transmitted by *Aedes aegypti*, which flies short distances,
+and the virus takes days (the extrinsic and intrinsic incubation
+periods) to pass from one person to the next. So, when there is local
+transmission, cases are **closer in space and time** than expected if
+space and time were independent. The **Knox test** (Knox 1964) counts
+the pairs of cases that are close in both space (less than `ds` metres)
+and time (less than `dt` days) and compares that number with its
+distribution when the dates are permuted at random (Monte Carlo). Each
+close pair is a **space-time link**, and the linked cases form the
+**transmission chains**.
+
+The example uses `sim_dengue`, **simulated** geocoded cases of the
+metropolitan area of Guadalajara; with the real geocoded dataset the
+steps are the same.
 
 ``` r
 library(denhotspots)
+library(ggplot2)
 ```
+
+## 1. The cases of a season
+
+[`knox_test()`](https://fdzul.github.io/denhotspots/reference/knox_test.md)
+needs a table with the coordinates (`x`, `y`) and the date of onset of
+symptoms (`onset`):
+
+``` r
+x <- subset(sim_dengue, ANO == 2024)
+x <- data.frame(x = x$long, y = x$lat, onset = x$FEC_INI_SIGNOS_SINT)
+nrow(x)
+#> [1] 1680
+```
+
+## 2. Knox test
+
+The windows are 400 m (the flight range of *Ae. aegypti* plus the
+movement of people around the house) and 20 days (the time between two
+cases of the same chain); the coordinates are projected
+(`crs = "+proj=eqc"`, metres) and the test uses 1,000 permutations.
+
+``` r
+res <- knox_test(x = x, crs = "+proj=eqc", dt = 20, ds = 400, sym = 1000,
+                 sp_link = FALSE, planar_coord = FALSE)
+res$knox
+#> $knox
+#> [1] 3875
+#> 
+#> $p_value
+#> [1] 0
+#> 
+#> $RR
+#> [1] 1.148744
+```
+
+- `knox`: number of pairs of cases close in space and time (space-time
+  links);
+- `p_value`: proportion of the permutations with at least as many pairs;
+- `RR`: ratio between the observed and the expected number of pairs.
+
+A small `p_value` (and `RR` \> 1) means space-time interaction: local
+transmission.
+
+## 3. Map of the transmission chains
+
+`res$space_time_link` has one line per link (EPSG:4326) and `res$x` the
+cases (in the projected coordinates). The map shows the links coloured
+by the epidemiological week of the cases, as
+[`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.md)
+does in an interactive map.
+
+``` r
+cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
+cases <- sf::st_transform(cases, 4326)
+cases$week <- cut(lubridate::epiweek(cases$onset), c(0, 25, 30, 35, 40, 45, 53),
+                  labels = c("1-25", "26-30", "31-35", "36-40", "41-45", "46-53"))
+linked <- lengths(sf::st_intersects(cases, sf::st_buffer(res$space_time_link, 1))) > 0
+
+loc <- rgeomex::extract_locality(cve_edo = "14",
+                                 locality = c("Guadalajara", "Zapopan", "Tlaquepaque", "Tonalá"))
+pal <- c("#2166AC", "#1B9E77", "#A6D854", "#F2B134", "#E6550D", "#B2182B")
+
+ggplot() +
+    geom_sf(data = loc, fill = "grey93", colour = NA) +
+    geom_sf(data = cases[!linked, ], colour = "grey55", size = 0.3) +
+    geom_sf(data = res$space_time_link, colour = "grey40", linewidth = 0.25, alpha = 0.6) +
+    geom_sf(data = cases[linked, ], aes(colour = week), size = 0.8) +
+    scale_colour_manual(values = pal, name = "Week") +
+    theme_void()
+```
+
+![Space-time links (400 m, 20 days) of the cases of
+2024.](knox-chains-1.png)
+
+Space-time links (400 m, 20 days) of the cases of 2024.
+
+The linked cases (in colour) form the chains; the grey points are cases
+without a link. With the real data,
+[`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.md)
+makes this map interactive directly from the geocoded dataset:
+
+``` r
+transmission_chains_map(geocoded_dataset = sim_dengue,
+                        cve_edo = "14", locality = "Guadalajara",
+                        dengue_cases = "Probable")
+```
+
+## 4. The chains by season
+
+``` r
+by_year <- lapply(2019:2024, function(y) {
+    d <- subset(sim_dengue, ANO == y)
+    d <- data.frame(x = d$long, y = d$lat, onset = d$FEC_INI_SIGNOS_SINT)
+    k <- knox_test(x = d, crs = "+proj=eqc", dt = 20, ds = 400, sym = 999,
+                   sp_link = FALSE, planar_coord = FALSE)$knox
+    data.frame(year = y, cases = nrow(d), links = k$knox,
+               RR = round(k$RR, 2), p_value = k$p_value)
+})
+do.call(rbind, by_year)
+#>   year cases links   RR p_value
+#> 1 2019  1413  2370 1.17       0
+#> 2 2020   414   318 1.40       0
+#> 3 2021   259   257 1.72       0
+#> 4 2022   597   624 1.33       0
+#> 5 2023  1139  1665 1.27       0
+#> 6 2024  1680  3875 1.15       0
+```
+
+## References
+
+- Knox EG (1964). The detection of space-time interactions. *Journal of
+  the Royal Statistical Society, Series C*, 13(1), 25-30.
+- Tango T (2010). *Statistical Methods for Disease Clustering*.
+  Springer.

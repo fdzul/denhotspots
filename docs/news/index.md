@@ -1,5 +1,21 @@
 # Changelog
 
+## denhotspots (development version)
+
+- [`knox()`](https://fdzul.github.io/denhotspots/reference/knox_test.md)
+  is now
+  [`knox_test()`](https://fdzul.github.io/denhotspots/reference/knox_test.md),
+  so it does not mask
+  [`knox::knox()`](https://rdrr.io/pkg/knox/man/knox.html);
+  [`knox()`](https://fdzul.github.io/denhotspots/reference/knox_test.md)
+  still works but is deprecated.
+- Removed `sf_joint_cov()` (COVID-19 data, outside the scope of the
+  package).
+- New `sim_dengue`: simulated geocoded dengue cases of the metropolitan
+  area of Guadalajara.
+- README with the dengueverse template (English and Spanish); titles for
+  all the functions.
+
 ## denhotspots 0.2.0
 
 ### Breaking changes

@@ -21,8 +21,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/clusters_analysis.html">clusters_analysis</a></li>
     <li><a class="dropdown-item" href="articles/count_cases_by_polygons.html">count_cases_by_polygons</a></li>
     <li><a class="dropdown-item" href="articles/geocoding.html">geocoding</a></li>
-    <li><a class="dropdown-item" href="articles/hotspots_analysis.html">hotspots_analysis</a></li>
-    <li><a class="dropdown-item" href="articles/knox_test.html">knox_test</a></li>
+    <li><a class="dropdown-item" href="articles/hotspots_analysis.html">Persistent transmission hotspots (Getis-Ord Gi*)</a></li>
+    <li><a class="dropdown-item" href="articles/knox_test.html">Space-time interaction: Knox test and transmission chains</a></li>
     <li><a class="dropdown-item" href="articles/lgcp_spatial.html">lgcp_spatial</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -60,6 +60,9 @@
 </tr></thead><tbody><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/power_laws.html"><code>power_laws</code></a></td>
 <td align="left">Theoretical power-law distributions</td>
 <td align="left"><a href="https://www.tandfonline.com/doi/abs/10.1080/00207390802213609" class="external-link">link</a></td>
+</tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/sim_dengue.html"><code>sim_dengue</code></a></td>
+<td align="left">Simulated geocoded dengue cases of the metropolitan area of Guadalajara</td>
+<td align="left">Simulated with <code>data-raw/sim_dengue.R</code>; population of Kontur (popmex::hdx_pop2023) and localities of INEGI 2019 (rgeomex).</td>
 </tr></tbody></table><p>Consulta la descripción completa de cada base con <code>?nombre</code>.</p>
 </div>
 <div class="section level2">
@@ -78,7 +81,7 @@
 <td align="left">Local spatial statistics Getis-Ord Gi* and Hi by time period</td>
 </tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/intensity_plot.html"><code>intensity_plot()</code></a></td>
 <td align="left">Map of the intensity of cases</td>
-</tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/knox.html"><code>knox()</code></a></td>
+</tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/knox_test.html"><code>knox_test()</code></a></td>
 <td align="left">Knox test of space-time interaction</td>
 </tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/map_risk.html"><code>map_risk()</code></a></td>
 <td align="left">Map of the risk of transmission</td>
@@ -98,8 +101,6 @@
 <td align="left">Run the SaTScan space-time scan statistic</td>
 </tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/save_geocoden.html"><code>save_geocoden()</code></a></td>
 <td align="left">Save the geocoded dataset</td>
-</tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/sf_joint_cov.html"><code>sf_joint_cov()</code></a></td>
-<td align="left">Join the COVID-19 cases with the municipal polygons</td>
 </tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/space_time_link_map.html"><code>space_time_link_map()</code></a></td>
 <td align="left">Map of the space-time links of the Knox test</td>
 </tr><tr><td align="left"><a href="https://fdzul.github.io/denhotspots/reference/spatial_lgcp.html"><code>spatial_lgcp()</code></a></td>
@@ -142,8 +143,8 @@
 <span>                 time <span class="op">=</span> <span class="st">"year"</span>, alpha <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3. interacción espacio-temporal con la prueba de Knox (20 días, 400 m)</span></span>
-<span><span class="va">knox_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/knox.html">knox</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cases_knox</span>, crs <span class="op">=</span> <span class="fl">4326</span>, dt <span class="op">=</span> <span class="fl">20</span>, ds <span class="op">=</span> <span class="fl">400</span>, sym <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>                 sp_link <span class="op">=</span> <span class="cn">FALSE</span>, planar_coord <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">knox_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/knox_test.html">knox_test</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cases_knox</span>, crs <span class="op">=</span> <span class="fl">4326</span>, dt <span class="op">=</span> <span class="fl">20</span>, ds <span class="op">=</span> <span class="fl">400</span>, sym <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>                      sp_link <span class="op">=</span> <span class="cn">FALSE</span>, planar_coord <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Hay ejemplos más completos en los <a href="https://fdzul.github.io/denhotspots/articles/">artículos</a> del sitio web.</p>
 </div>
 <div class="section level2">
