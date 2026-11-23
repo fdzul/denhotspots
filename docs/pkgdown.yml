@@ -5,10 +5,10 @@ articles:
   clusters_analysis: clusters_analysis.html
   count_cases_by_polygons: count_cases_by_polygons.html
   geocoding: geocoding.html
-  hotspots_analysis: hotspots_analysis.html
-  knox_test: knox_test.html
+  hotspots_analysis_en: hotspots_analysis_en.html
+  knox_test_en: knox_test_en.html
   lgcp_spatial: lgcp_spatial.html
-last_built: 2026-11-23T04:23Z
+last_built: 2026-11-23T04:28Z
 urls:
   reference: https://fdzul.github.io/denhotspots/reference
   article: https://fdzul.github.io/denhotspots/articles
