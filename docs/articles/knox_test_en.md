@@ -43,6 +43,9 @@ cases of the same chain); the coordinates are projected
 ``` r
 res <- knox_test(x = x, crs = "+proj=eqc", dt = 20, ds = 400, sym = 1000,
                  sp_link = FALSE, planar_coord = FALSE)
+```
+
+``` r
 res$knox
 #> $knox
 #> [1] 3875
@@ -65,10 +68,9 @@ transmission.
 ## 3. Map of the transmission chains
 
 `res$space_time_link` has one line per link (EPSG:4326) and `res$x` the
-cases (in the projected coordinates). The map shows the links coloured
-by the epidemiological week of the cases, as
-[`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.md)
-does in an interactive map.
+cases (in projected coordinates). The static map shows the links and the
+linked cases coloured by epidemiological week; the grey points are cases
+without a link.
 
 ``` r
 cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
@@ -95,10 +97,38 @@ ggplot() +
 
 Space-time links (400 m, 20 days) of the cases of 2024.
 
-The linked cases (in colour) form the chains; the grey points are cases
-without a link. With the real data,
+The same map, interactive: click a case to see its date of onset, and
+use the layer control to show or hide each layer.
+
+``` r
+library(leaflet)
+
+cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
+cases <- sf::st_transform(cases, 4326)
+cases$week <- cut(lubridate::epiweek(cases$onset), c(0, 25, 30, 35, 40, 45, 53),
+                  labels = c("1-25", "26-30", "31-35", "36-40", "41-45", "46-53"))
+linked <- lengths(sf::st_intersects(cases, sf::st_buffer(res$space_time_link, 1))) > 0
+pal <- colorFactor(c("#2166AC", "#1B9E77", "#A6D854", "#F2B134", "#E6550D", "#B2182B"),
+                   cases$week)
+
+leaflet(width = "100%", height = 560) |>
+    addProviderTiles("CartoDB.Positron") |>
+    addCircleMarkers(data = cases[!linked, ], radius = 2, stroke = FALSE,
+                     fillColor = "grey", fillOpacity = 0.6, group = "Cases without link") |>
+    addPolylines(data = res$space_time_link, color = "#555555", weight = 1,
+                 opacity = 0.6, group = "Space-time links") |>
+    addCircleMarkers(data = cases[linked, ], radius = 3.5, stroke = FALSE,
+                     fillColor = ~pal(week), fillOpacity = 0.9,
+                     popup = ~paste0("Onset: ", onset, "<br>", "Week: ", week),
+                     group = "Linked cases") |>
+    addLegend(pal = pal, values = cases$week, title = "Epi week") |>
+    addLayersControl(overlayGroups = c("Cases without link", "Space-time links", "Linked cases"),
+                     options = layersControlOptions(collapsed = FALSE))
+```
+
+The linked cases form the chains. With the real data,
 [`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.md)
-makes this map interactive directly from the geocoded dataset:
+makes this map directly from the geocoded dataset:
 
 ``` r
 transmission_chains_map(geocoded_dataset = sim_dengue,
@@ -118,14 +148,15 @@ by_year <- lapply(2019:2024, function(y) {
                RR = round(k$RR, 2), p_value = k$p_value)
 })
 do.call(rbind, by_year)
-#>   year cases links   RR p_value
-#> 1 2019  1413  2370 1.17       0
-#> 2 2020   414   318 1.40       0
-#> 3 2021   259   257 1.72       0
-#> 4 2022   597   624 1.33       0
-#> 5 2023  1139  1665 1.27       0
-#> 6 2024  1680  3875 1.15       0
 ```
+
+    #>   year cases links   RR p_value
+    #> 1 2019  1413  2370 1.17       0
+    #> 2 2020   414   318 1.40       0
+    #> 3 2021   259   257 1.72       0
+    #> 4 2022   597   624 1.33       0
+    #> 5 2023  1139  1665 1.27       0
+    #> 6 2024  1680  3875 1.15       0
 
 ## References
 

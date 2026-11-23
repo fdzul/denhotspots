@@ -43,6 +43,9 @@ entre dos casos de la misma cadena); las coordenadas se proyectan
 ``` r
 res <- knox_test(x = x, crs = "+proj=eqc", dt = 20, ds = 400, sym = 1000,
                  sp_link = FALSE, planar_coord = FALSE)
+```
+
+``` r
 res$knox
 #> $knox
 #> [1] 3875
@@ -65,10 +68,9 @@ transmisión local.
 ## 3. Mapa de las cadenas de transmisión
 
 `res$space_time_link` tiene una línea por vínculo (EPSG:4326) y `res$x`
-los casos (en las coordenadas proyectadas). El mapa muestra los vínculos
-y los casos coloreados por semana epidemiológica, como lo hace
-[`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.md)
-en un mapa interactivo.
+los casos (en coordenadas proyectadas). El mapa estático muestra los
+vínculos y los casos vinculados coloreados por semana epidemiológica;
+los puntos grises son casos sin vínculo.
 
 ``` r
 cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
@@ -86,19 +88,48 @@ ggplot() +
     geom_sf(data = cases[!linked, ], colour = "grey55", size = 0.3) +
     geom_sf(data = res$space_time_link, colour = "grey40", linewidth = 0.25, alpha = 0.6) +
     geom_sf(data = cases[linked, ], aes(colour = week), size = 0.8) +
-    scale_colour_manual(values = pal, name = "Week") +
+    scale_colour_manual(values = pal, name = "Semana") +
     theme_void()
 ```
 
 ![Vínculos espacio-temporales (400 m, 20 días) de los casos de
-2024.](knox-chains-1.png)
+2024.](knox-es-chains-1.png)
 
 Vínculos espacio-temporales (400 m, 20 días) de los casos de 2024.
 
-Los casos vinculados (en color) forman las cadenas; los puntos grises
-son casos sin vínculo. Con los datos reales,
+El mismo mapa, interactivo: da clic en un caso para ver su fecha de
+inicio de síntomas, y usa el control de capas para mostrar u ocultar
+cada capa.
+
+``` r
+library(leaflet)
+
+cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
+cases <- sf::st_transform(cases, 4326)
+cases$week <- cut(lubridate::epiweek(cases$onset), c(0, 25, 30, 35, 40, 45, 53),
+                  labels = c("1-25", "26-30", "31-35", "36-40", "41-45", "46-53"))
+linked <- lengths(sf::st_intersects(cases, sf::st_buffer(res$space_time_link, 1))) > 0
+pal <- colorFactor(c("#2166AC", "#1B9E77", "#A6D854", "#F2B134", "#E6550D", "#B2182B"),
+                   cases$week)
+
+leaflet(width = "100%", height = 560) |>
+    addProviderTiles("CartoDB.Positron") |>
+    addCircleMarkers(data = cases[!linked, ], radius = 2, stroke = FALSE,
+                     fillColor = "grey", fillOpacity = 0.6, group = "Casos sin vínculo") |>
+    addPolylines(data = res$space_time_link, color = "#555555", weight = 1,
+                 opacity = 0.6, group = "Vínculos espacio-temporales") |>
+    addCircleMarkers(data = cases[linked, ], radius = 3.5, stroke = FALSE,
+                     fillColor = ~pal(week), fillOpacity = 0.9,
+                     popup = ~paste0("Inicio de síntomas: ", onset, "<br>", "Semana: ", week),
+                     group = "Casos vinculados") |>
+    addLegend(pal = pal, values = cases$week, title = "Semana epi.") |>
+    addLayersControl(overlayGroups = c("Casos sin vínculo", "Vínculos espacio-temporales", "Casos vinculados"),
+                     options = layersControlOptions(collapsed = FALSE))
+```
+
+Los casos vinculados forman las cadenas. Con los datos reales,
 [`transmission_chains_map()`](https://fdzul.github.io/denhotspots/reference/transmission_chains_map.md)
-hace este mapa interactivo directamente desde la base geocodificada:
+hace este mapa directamente desde la base geocodificada:
 
 ``` r
 transmission_chains_map(geocoded_dataset = sim_dengue,
@@ -118,14 +149,15 @@ by_year <- lapply(2019:2024, function(y) {
                RR = round(k$RR, 2), p_value = k$p_value)
 })
 do.call(rbind, by_year)
-#>   year cases links   RR p_value
-#> 1 2019  1413  2370 1.17       0
-#> 2 2020   414   318 1.40       0
-#> 3 2021   259   257 1.72       0
-#> 4 2022   597   624 1.33       0
-#> 5 2023  1139  1665 1.27       0
-#> 6 2024  1680  3875 1.15       0
 ```
+
+    #>   year cases links   RR p_value
+    #> 1 2019  1413  2370 1.17       0
+    #> 2 2020   414   318 1.40       0
+    #> 3 2021   259   257 1.72       0
+    #> 4 2022   597   624 1.33       0
+    #> 5 2023  1139  1665 1.27       0
+    #> 6 2024  1680  3875 1.15       0
 
 En las seis temporadas simuladas hay interacción espacio-temporal (p \<
 0.001); el RR es mayor en los años con pocos casos, cuando los casos que

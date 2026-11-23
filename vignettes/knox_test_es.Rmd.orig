@@ -8,7 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "knox-",
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "knox-es-",
                       fig.width = 7, fig.height = 6.5, dpi = 96, out.width = "100%",
                       message = FALSE, warning = FALSE)
 ```
@@ -51,9 +51,24 @@ de las personas alrededor de la casa) y 20 días (el tiempo entre dos casos de
 la misma cadena); las coordenadas se proyectan (`crs = "+proj=eqc"`, metros) y
 la prueba usa 1,000 permutaciones.
 
-```{r knox}
+```{r knox, eval = FALSE}
 res <- knox_test(x = x, crs = "+proj=eqc", dt = 20, ds = 400, sym = 1000,
                  sp_link = FALSE, planar_coord = FALSE)
+```
+
+```{r knox-run, include = FALSE}
+# slow: computed once and kept in knox-2024.rds, which the
+# interactive map below also reads when the site is built
+if (file.exists("knox-2024.rds")) {
+    res <- readRDS("knox-2024.rds")
+} else {
+    res <- knox_test(x = x, crs = "+proj=eqc", dt = 20, ds = 400, sym = 1000,
+                     sp_link = FALSE, planar_coord = FALSE)
+    saveRDS(res, "knox-2024.rds")
+}
+```
+
+```{r knox-result}
 res$knox
 ```
 
@@ -68,9 +83,9 @@ transmisión local.
 ## 3. Mapa de las cadenas de transmisión
 
 `res$space_time_link` tiene una línea por vínculo (EPSG:4326) y `res$x` los
-casos (en las coordenadas proyectadas). El mapa muestra los vínculos y los
-casos coloreados por semana epidemiológica, como lo hace
-`transmission_chains_map()` en un mapa interactivo.
+casos (en coordenadas proyectadas). El mapa estático muestra los vínculos y
+los casos vinculados coloreados por semana epidemiológica; los puntos grises
+son casos sin vínculo.
 
 ```{r chains, fig.cap = "Vínculos espacio-temporales (400 m, 20 días) de los casos de 2024."}
 cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
@@ -88,13 +103,46 @@ ggplot() +
     geom_sf(data = cases[!linked, ], colour = "grey55", size = 0.3) +
     geom_sf(data = res$space_time_link, colour = "grey40", linewidth = 0.25, alpha = 0.6) +
     geom_sf(data = cases[linked, ], aes(colour = week), size = 0.8) +
-    scale_colour_manual(values = pal, name = "Week") +
+    scale_colour_manual(values = pal, name = "Semana") +
     theme_void()
 ```
 
-Los casos vinculados (en color) forman las cadenas; los puntos grises son
-casos sin vínculo. Con los datos reales, `transmission_chains_map()` hace este
-mapa interactivo directamente desde la base geocodificada:
+El mismo mapa, interactivo: da clic en un caso para ver su fecha de inicio de
+síntomas, y usa el control de capas para mostrar u ocultar cada capa.
+
+`r ''````{r chains-data, include = FALSE}
+res <- readRDS("knox-2024.rds")
+```
+
+`r ''````{r chains-map, eval = requireNamespace("leaflet", quietly = TRUE)}
+library(leaflet)
+
+cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
+cases <- sf::st_transform(cases, 4326)
+cases$week <- cut(lubridate::epiweek(cases$onset), c(0, 25, 30, 35, 40, 45, 53),
+                  labels = c("1-25", "26-30", "31-35", "36-40", "41-45", "46-53"))
+linked <- lengths(sf::st_intersects(cases, sf::st_buffer(res$space_time_link, 1))) > 0
+pal <- colorFactor(c("#2166AC", "#1B9E77", "#A6D854", "#F2B134", "#E6550D", "#B2182B"),
+                   cases$week)
+
+leaflet(width = "100%", height = 560) |>
+    addProviderTiles("CartoDB.Positron") |>
+    addCircleMarkers(data = cases[!linked, ], radius = 2, stroke = FALSE,
+                     fillColor = "grey", fillOpacity = 0.6, group = "Casos sin vínculo") |>
+    addPolylines(data = res$space_time_link, color = "#555555", weight = 1,
+                 opacity = 0.6, group = "Vínculos espacio-temporales") |>
+    addCircleMarkers(data = cases[linked, ], radius = 3.5, stroke = FALSE,
+                     fillColor = ~pal(week), fillOpacity = 0.9,
+                     popup = ~paste0("Inicio de síntomas: ", onset, "<br>", "Semana: ", week),
+                     group = "Casos vinculados") |>
+    addLegend(pal = pal, values = cases$week, title = "Semana epi.") |>
+    addLayersControl(overlayGroups = c("Casos sin vínculo", "Vínculos espacio-temporales", "Casos vinculados"),
+                     options = layersControlOptions(collapsed = FALSE))
+```
+
+Los casos vinculados forman las cadenas. Con los datos reales,
+`transmission_chains_map()` hace este mapa directamente desde la base
+geocodificada:
 
 ```{r chains-interactive, eval = FALSE}
 transmission_chains_map(geocoded_dataset = sim_dengue,
@@ -104,7 +152,7 @@ transmission_chains_map(geocoded_dataset = sim_dengue,
 
 ## 4. Las cadenas por temporada
 
-```{r seasons}
+```{r seasons, eval = FALSE}
 by_year <- lapply(2019:2024, function(y) {
     d <- subset(sim_dengue, ANO == y)
     d <- data.frame(x = d$long, y = d$lat, onset = d$FEC_INI_SIGNOS_SINT)
@@ -114,6 +162,24 @@ by_year <- lapply(2019:2024, function(y) {
                RR = round(k$RR, 2), p_value = k$p_value)
 })
 do.call(rbind, by_year)
+```
+
+```{r seasons-run, echo = FALSE}
+if (file.exists("knox-seasons.rds")) {
+    seasons <- readRDS("knox-seasons.rds")
+} else {
+    by_year <- lapply(2019:2024, function(y) {
+        d <- subset(sim_dengue, ANO == y)
+        d <- data.frame(x = d$long, y = d$lat, onset = d$FEC_INI_SIGNOS_SINT)
+        k <- knox_test(x = d, crs = "+proj=eqc", dt = 20, ds = 400, sym = 999,
+                       sp_link = FALSE, planar_coord = FALSE)$knox
+        data.frame(year = y, cases = nrow(d), links = k$knox,
+                   RR = round(k$RR, 2), p_value = k$p_value)
+    })
+    seasons <- do.call(rbind, by_year)
+    saveRDS(seasons, "knox-seasons.rds")
+}
+seasons
 ```
 
 En las seis temporadas simuladas hay interacción espacio-temporal

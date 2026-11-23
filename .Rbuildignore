@@ -13,3 +13,4 @@
 ^data-raw$
 ^vignettes/.*\.Rmd\.orig$
 ^vignettes/precompile\.R$
+^vignettes/knox-seasons\.rds$
