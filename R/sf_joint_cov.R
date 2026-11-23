@@ -1,3 +1,5 @@
+#' Join the COVID-19 cases with the municipal polygons
+#'
 #' sf_joint_cov
 #' this function apply the dplyr::left_join between sf and covid data of México
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/knox.R
 \name{knox}
 \alias{knox}
-\title{knox test}
+\title{Knox test of space-time interaction}
 \usage{
 knox(x, crs, dt, ds, sym, sp_link, planar_coord)
 }

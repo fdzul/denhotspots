@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_dengue_dataset.R
 \name{read_dengue_dataset}
 \alias{read_dengue_dataset}
-\title{read_dengue_dataset}
+\title{Read the dengue dataset of SINAVE}
 \usage{
 read_dengue_dataset(
   path,

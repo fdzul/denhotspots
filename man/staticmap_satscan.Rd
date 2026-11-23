@@ -2,7 +2,7 @@
 % Please edit documentation in R/staticmap_satscan.R
 \name{staticmap_satscan}
 \alias{staticmap_satscan}
-\title{staticmap_satscan}
+\title{Static map of the SaTScan clusters}
 \usage{
 staticmap_satscan(
   x,

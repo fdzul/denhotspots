@@ -1,4 +1,4 @@
-#' power_law_plot
+#' Plot of the power law of the hotspots
 #'
 #' this plot generate the all Power Law for hotspots and spatial units.
 #'

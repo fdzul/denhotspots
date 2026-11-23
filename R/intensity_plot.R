@@ -1,4 +1,4 @@
-#' intensity_plot
+#' Map of the intensity of cases
 #'
 #' this function plot the event hotspots by polygon.
 #'

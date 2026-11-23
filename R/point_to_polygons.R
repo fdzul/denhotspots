@@ -1,4 +1,4 @@
-#' point_to_polygon
+#' Count the geocoded cases by spatial unit and time period
 #'
 #' this function counts how many events for spatial unit
 #'

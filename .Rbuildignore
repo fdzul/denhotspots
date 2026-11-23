@@ -8,3 +8,5 @@
 ^\.positai$
 ^\.claude$
 ^\.DS_Store$
+^build_readme\.R$
+^README\.es\.md$

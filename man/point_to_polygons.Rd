@@ -2,7 +2,7 @@
 % Please edit documentation in R/point_to_polygons.R
 \name{point_to_polygons}
 \alias{point_to_polygons}
-\title{point_to_polygon}
+\title{Count the geocoded cases by spatial unit and time period}
 \usage{
 point_to_polygons(x, y, ids, time, coords, crs, dis)
 }

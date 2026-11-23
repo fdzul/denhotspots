@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_geocoden.R
 \name{data_geocoden}
 \alias{data_geocoden}
-\title{data_geocoden}
+\title{Prepare the addresses of the cases for geocoding}
 \usage{
 data_geocoden(infile, data, sinave_new)
 }

@@ -1,4 +1,4 @@
-#' subset_den
+#' Subset the dengue dataset by state, municipality and locality
 #'
 #' is a function for subset de dengue dataset
 #'

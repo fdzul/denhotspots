@@ -1,4 +1,4 @@
-#' staticmap_satscan
+#' Static map of the SaTScan clusters
 #'
 #' This function generate the map of the output for [SaTScan](https://www.satscan.org/) or [rsatscan](https://cran.r-project.org/web/packages/rsatscan/vignettes/rsatscan.html).
 #'

@@ -1,4 +1,4 @@
-#' read_dengue_dataset
+#' Read the dengue dataset of SINAVE
 #'
 #' Read the dengue dataset of [SINAVE](https://www.sinave.gob.mx/)
 #'

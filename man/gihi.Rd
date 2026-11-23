@@ -2,7 +2,7 @@
 % Please edit documentation in R/gihi.R
 \name{gihi}
 \alias{gihi}
-\title{gihi}
+\title{Local spatial statistics Getis-Ord Gi* and Hi by time period}
 \usage{
 gihi(x, gi_hi, id, dis, time, alpha = NULL)
 }

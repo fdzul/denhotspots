@@ -2,7 +2,7 @@
 % Please edit documentation in R/staticmap_intensity.R
 \name{staticmap_intensity}
 \alias{staticmap_intensity}
-\title{staticmap_intensity}
+\title{Static map of the intensity of cases}
 \usage{
 staticmap_intensity(
   x,

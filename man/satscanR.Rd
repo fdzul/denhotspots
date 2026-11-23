@@ -2,7 +2,7 @@
 % Please edit documentation in R/satscanR.R
 \name{satscanR}
 \alias{satscanR}
-\title{satscanR}
+\title{Run the SaTScan space-time scan statistic}
 \usage{
 satscanR(
   cas_file,

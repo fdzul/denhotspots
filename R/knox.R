@@ -1,4 +1,4 @@
-#' knox test
+#' Knox test of space-time interaction
 #'
 #' @description This function implement space-time analysis with the knox test
 #'

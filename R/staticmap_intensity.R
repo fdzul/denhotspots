@@ -1,4 +1,4 @@
-#' staticmap_intensity
+#' Static map of the intensity of cases
 #'
 #' This function generate the intensity map of hotspots.
 #'

@@ -1,4 +1,4 @@
-#' data_geocoden
+#' Prepare the addresses of the cases for geocoding
 #'
 #' this function creates an address vector and replaces incorrect text.
 #'

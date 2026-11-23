@@ -1,4 +1,4 @@
-#' satscanR
+#' Run the SaTScan space-time scan statistic
 #'
 #' This function performs space-time analysis with SaTScan.
 #'

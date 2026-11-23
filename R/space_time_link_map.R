@@ -1,4 +1,4 @@
-#' space-time link map
+#' Map of the space-time links of the Knox test
 #'
 #' The purpose of this function is to visualize the transmission chains resulting from the knox test.
 #'

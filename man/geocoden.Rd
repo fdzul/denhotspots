@@ -2,7 +2,7 @@
 % Please edit documentation in R/geocoden.R
 \name{geocoden}
 \alias{geocoden}
-\title{geocoden}
+\title{Geocode the addresses of the cases}
 \usage{
 geocoden(infile, address)
 }

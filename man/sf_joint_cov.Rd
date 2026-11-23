@@ -2,8 +2,7 @@
 % Please edit documentation in R/sf_joint_cov.R
 \name{sf_joint_cov}
 \alias{sf_joint_cov}
-\title{sf_joint_cov
-this function apply the dplyr::left_join between sf and covid data of México}
+\title{Join the COVID-19 cases with the municipal polygons}
 \usage{
 sf_joint_cov(path_dat, path_sf)
 }

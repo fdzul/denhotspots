@@ -2,7 +2,7 @@
 % Please edit documentation in R/spatial_lgcp.R
 \name{spatial_lgcp}
 \alias{spatial_lgcp}
-\title{Spatial Log Gaussian Cox Process}
+\title{Spatial log-Gaussian Cox process model with INLA}
 \usage{
 spatial_lgcp(
   dataset,

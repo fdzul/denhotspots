@@ -1,4 +1,4 @@
-#' save_geocoden
+#' Save the geocoded dataset
 #'
 #' This function generates the RData file where it contains the geocoded data and the sinave database.
 #'

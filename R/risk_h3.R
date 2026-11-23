@@ -1,4 +1,4 @@
-#' risk_h3
+#' Risk of transmission by H3 hexagon
 #'
 #' risk h3 identifies epidemiological scenarios based on historical epidemiological and entomological information.
 #'

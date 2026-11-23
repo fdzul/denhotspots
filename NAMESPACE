@@ -27,7 +27,9 @@ export(subset_den)
 export(transmission_chains_map)
 importFrom(magrittr,"%>%")
 importFrom(methods,as)
-importFrom(stats,predict)
-importFrom(stats,qnorm)
-importFrom(stats,sd)
+importFrom(stats,
+  predict,
+  qnorm,
+  sd
+)
 importFrom(utils,write.csv)

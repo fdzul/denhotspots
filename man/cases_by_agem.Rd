@@ -2,7 +2,7 @@
 % Please edit documentation in R/cases_by_agem.R
 \name{cases_by_agem}
 \alias{cases_by_agem}
-\title{cases_by_agem}
+\title{Count the cases of a vector-borne disease by municipality}
 \usage{
 cases_by_agem(path, disease)
 }

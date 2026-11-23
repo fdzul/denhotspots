@@ -2,7 +2,7 @@
 % Please edit documentation in R/intensity_plot.R
 \name{intensity_plot}
 \alias{intensity_plot}
-\title{intensity_plot}
+\title{Map of the intensity of cases}
 \usage{
 intensity_plot(
   x,

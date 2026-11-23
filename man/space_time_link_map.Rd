@@ -2,7 +2,7 @@
 % Please edit documentation in R/space_time_link_map.R
 \name{space_time_link_map}
 \alias{space_time_link_map}
-\title{space-time link map}
+\title{Map of the space-time links of the Knox test}
 \usage{
 space_time_link_map(x, locality, cve_edo, maptype, facetmap = NULL)
 }

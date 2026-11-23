@@ -1,4 +1,4 @@
-#' gihi
+#' Local spatial statistics Getis-Ord Gi* and Hi by time period
 #'
 #' Calculate gi and hi local spatial statistic
 #'

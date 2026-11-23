@@ -1,4 +1,4 @@
-#' map_risk
+#' Map of the risk of transmission
 #'
 #' The map_risk function generates the map of the operational scenarios or epidemiological scenarios based on the hotspots of dengue transmission and the hotspots of the abundance of dengue vector eggs.
 #'

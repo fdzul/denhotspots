@@ -3,7 +3,7 @@
 \docType{data}
 \name{power_laws}
 \alias{power_laws}
-\title{Power Laws data.}
+\title{Theoretical power-law distributions}
 \format{
 A dataframe object with 606 rows and 3 variables:
 \describe{

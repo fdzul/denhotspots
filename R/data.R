@@ -1,4 +1,4 @@
-#' Power Laws data.
+#' Theoretical power-law distributions
 #'
 #' A dataset containing the Power Laws dataset.
 #'

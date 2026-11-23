@@ -1,4 +1,4 @@
-#' transmission_chain_map
+#' Map of the transmission chains
 #'
 #' the function generate the space-time links map with mapview package.
 #'

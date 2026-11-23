@@ -2,7 +2,7 @@
 % Please edit documentation in R/risk_h3.R
 \name{risk_h3}
 \alias{risk_h3}
-\title{risk_h3}
+\title{Risk of transmission by H3 hexagon}
 \usage{
 risk_h3(betas, hotspots, intensity_perc, locality, cve_edo)
 }

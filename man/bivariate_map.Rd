@@ -2,7 +2,7 @@
 % Please edit documentation in R/bivariate_map.R
 \name{bivariate_map}
 \alias{bivariate_map}
-\title{bivariate_map}
+\title{Bivariate choropleth map of two variables}
 \usage{
 bivariate_map(w, x, y, dim, pal, style, size_axis, scale_leg, x_leg, y_leg)
 }

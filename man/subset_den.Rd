@@ -2,7 +2,7 @@
 % Please edit documentation in R/subset_den.R
 \name{subset_den}
 \alias{subset_den}
-\title{subset_den}
+\title{Subset the dengue dataset by state, municipality and locality}
 \usage{
 subset_den(x = NULL, path = NULL, edo, mun, loc, sinave_new, age_group, name)
 }

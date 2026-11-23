@@ -2,7 +2,7 @@
 % Please edit documentation in R/map_risk.R
 \name{map_risk}
 \alias{map_risk}
-\title{map_risk}
+\title{Map of the risk of transmission}
 \usage{
 map_risk(risk, staticmap)
 }

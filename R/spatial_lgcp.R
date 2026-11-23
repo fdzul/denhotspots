@@ -1,4 +1,4 @@
-#' Spatial Log Gaussian Cox Process
+#' Spatial log-Gaussian Cox process model with INLA
 #'
 #' The spatial_lgcp has the objective of performing the spatial analysis with the log gaussian cox process model in order to predict the intensity of cases in urban and metropolitan endemic dengue locations in Mexico.
 #'

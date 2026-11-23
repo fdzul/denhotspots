@@ -1,4 +1,4 @@
-#' geocoden
+#' Geocode the addresses of the cases
 #'
 #' this function geocodes the addresses of the sinave database using Geocoding API.
 #'

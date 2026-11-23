@@ -1,4 +1,4 @@
-#' bivariate_map
+#' Bivariate choropleth map of two variables
 #'
 #' generate a bivariate map
 #'

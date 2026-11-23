@@ -2,7 +2,7 @@
 % Please edit documentation in R/risk_ageb.R
 \name{risk_ageb}
 \alias{risk_ageb}
-\title{risk_ageb}
+\title{Risk of transmission by AGEB}
 \usage{
 risk_ageb(betas, hotspots, intensity_perc, locality, cve_edo)
 }

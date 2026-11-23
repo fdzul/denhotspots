@@ -2,7 +2,7 @@
 % Please edit documentation in R/transmission_chain_map.R
 \name{transmission_chains_map}
 \alias{transmission_chains_map}
-\title{transmission_chain_map}
+\title{Map of the transmission chains}
 \usage{
 transmission_chains_map(geocoded_dataset, cve_edo, locality, dengue_cases)
 }

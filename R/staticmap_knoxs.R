@@ -1,4 +1,4 @@
-#' staticmap_knoxs
+#' Static map of the space-time links of the Knox test
 #'
 #' This function generate the space-time link map.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/staticmap_knoxs.R
 \name{staticmap_knoxs}
 \alias{staticmap_knoxs}
-\title{staticmap_knoxs}
+\title{Static map of the space-time links of the Knox test}
 \usage{
 staticmap_knoxs(
   locality,

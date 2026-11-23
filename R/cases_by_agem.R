@@ -1,4 +1,4 @@
-#' cases_by_agem
+#' Count the cases of a vector-borne disease by municipality
 #'
 #' this function left joint sf AGEM and the cases by municipality.
 #'

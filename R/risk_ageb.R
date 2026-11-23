@@ -1,4 +1,4 @@
-#' risk_ageb
+#' Risk of transmission by AGEB
 #'
 #' risk ageb identifies epidemiological scenarios based on historical epidemiological and entomological information.
 #'

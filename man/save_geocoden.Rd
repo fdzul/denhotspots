@@ -2,7 +2,7 @@
 % Please edit documentation in R/save_geocoden.R
 \name{save_geocoden}
 \alias{save_geocoden}
-\title{save_geocoden}
+\title{Save the geocoded dataset}
 \usage{
 save_geocoden(x, y, directory, loc)
 }

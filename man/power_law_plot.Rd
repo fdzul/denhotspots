@@ -2,7 +2,7 @@
 % Please edit documentation in R/power_law_plot.R
 \name{power_law_plot}
 \alias{power_law_plot}
-\title{power_law_plot}
+\title{Plot of the power law of the hotspots}
 \usage{
 power_law_plot(x)
 }
