@@ -1,6 +1,9 @@
 # Knox test of space-time interaction
 
-This function implement space-time analysis with the knox test
+Tests whether the cases are closer in space and time than expected if
+space and time were independent (Knox 1964), and returns the pairs of
+cases close in both (the space-time links that form the transmission
+chains).
 
 ## Usage
 
@@ -14,33 +17,39 @@ knox(...)
 
 - x:
 
-  is the dataset with the coordinates and onset of symptoms
+  a data frame with the coordinates of the cases (\`x\`, \`y\`) and the
+  date of onset of symptoms (\`onset\`, a \`Date\` or a number).
 
 - crs:
 
-  is the coordinate reference system.
+  the projected coordinate reference system used to measure the
+  distances (for example \`"+proj=eqc"\`, in metres).
 
 - dt:
 
-  is the temporal windows.
+  the time window: two cases are close in time when their onsets are at
+  most \`dt\` apart (days if \`onset\` is a \`Date\`).
 
 - ds:
 
-  is the spatial windows.
+  the space window: two cases are close in space when they are at most
+  \`ds\` apart (units of \`crs\`, or of the coordinates if
+  \`planar_coord = TRUE\`).
 
 - sym:
 
-  is the MonteCarlo replications number.
+  the number of Monte Carlo permutations.
 
 - sp_link:
 
-  is the logical value. If sp_link is true the space-time link is built
-  with sp, else with sf.
+  logical. If \`TRUE\` the space-time links are built with sp, else with
+  sf.
 
 - planar_coord:
 
-  is the logical value.if planar_coord is false, the dataset is
-  projected to a planar system.
+  logical. If \`FALSE\`, \`x\` and \`y\` are longitude and latitude
+  (EPSG:4326) and are projected to \`crs\`; if \`TRUE\`, they are
+  already planar coordinates.
 
 - ...:
 
@@ -48,52 +57,61 @@ knox(...)
 
 ## Value
 
-a list with three elements: knox, st_link, space-time link. - \*knox\*
-is a list with three elements:
+A list with four elements: - \`knox\`, a list with the test:
 
 - knox:
 
-  Knox statistic, which is the number of pairs of points found in a
-  given space-time distance.
+  Knox statistic: number of pairs of cases close in space and time.
 
 - p_value:
 
-  p-value calculated from MonteCarlo simulation.
+  Monte Carlo p-value, \\(m + 1)/(sym + 1)\\, where \\m\\ is the number
+  of permutations of the onsets with at least \`knox\` pairs.
 
 - RR:
 
-  Relative Risk - calculated by observed value (Knox statistics) divided
-  by mean of simulated values.
+  observed pairs divided by the mean of the permutations.
 
-\- \*st_link\* is a origen-destination dataset of class dataframe. This
-dataset has four variables:
+- expected:
 
-- Xo:
+  expected pairs, \`pairs_space \* pairs_time / pairs\` (Knox 1964;
+  Tango 2010).
 
-  is the longitude of the point of origin.
+- RR_expected:
 
-- Yo:
+  observed pairs divided by \`expected\`.
 
-  are the latitud of the point of origin.
+- p_poisson:
 
-- Xd:
+  Poisson mid-p-value of \`knox\` with mean \`expected\`, as in Tango
+  (2010).
 
-  are the longitude of the destination point.
+- pairs:
 
-- Yd:
+  total number of pairs of cases, \\n(n - 1)/2\\.
 
-  are the latitud of the destination point.
+- pairs_space:
 
-\- \*space-time link\* is a sf object (LINESTRING) with crs 4326.
+  pairs of cases close in space.
+
+- pairs_time:
+
+  pairs of cases close in time.
+
+\- \`st_link\`, a data frame with one row per space-time link and the
+coordinates of its two cases (\`Xo\`, \`Yo\`, \`Xd\`, \`Yd\`). - \`x\`,
+the cases with the planar coordinates. - \`space_time_link\`, an sf
+object (LINESTRING, EPSG:4326) with the space-time links.
 
 ## Details
 
-This function implements the space-time analysis with the knox test. x
-is a dataframe with three variables: x (longitude), y (latitude) and
-onset (onset of symptoms) The coordinates should be projected to a
-planar system. The function rknox test use the
-(knox)\[https://github.com/thanhleviet/knox\] package of
-(github)\[https://github.com/\].
+Two cases are close in space when their distance is at most \`ds\`, and
+close in time when their onsets are at most \`dt\` apart, as in the
+tables of Tango (2010). The test gives two p-values: the Monte Carlo
+p-value (the onsets are permuted among the cases \`sym\` times), and the
+Poisson mid-p-value used by Knox (1964) and Tango (2010), which is an
+approximation that can be misleading when the expected number of pairs
+is not small (Barton and David 1966).
 
 \`knox()\` is the former name of \`knox_test()\`; it still works but it
 is deprecated, because it has the same name as the function of the knox
@@ -101,16 +119,26 @@ package.
 
 ## References
 
-**Knox, E. (1964)**. *The detection of space-time interactions.* Journal
-of the Royal Statistical Society. Series C (13(1), 25-30. **Tango, T.
-(2010)**. *Statistical methods for disease clustering. Springer.*
+Knox EG (1964). The detection of space-time interactions. \*Journal of
+the Royal Statistical Society, Series C\*, 13(1), 25-30.
+
+Tango T (2010). \*Statistical Methods for Disease Clustering\*.
+Springer.
 
 ## See also
 
-[knox_mc](https://rdrr.io/pkg/knox/man/knox_simulation.html),
-[st_link](https://rdrr.io/pkg/knox/man/st_links.html),
-[knox](https://rdrr.io/pkg/knox/man/knox.html)
+\[kaposi_uganda\] for the example of Tango (2010), and
+\[transmission_chains_map()\].
 
 ## Author
 
 Felipe Antonio Dzul Manzanilla <felipe.dzul.m@gmail.com>
+
+## Examples
+
+``` r
+# Kaposi's sarcoma in Uganda (Tango 2010, Table 7.7): 5 km and same year
+k <- knox_test(x = kaposi_uganda, crs = NULL, ds = 5, dt = 0, sym = 999,
+               sp_link = FALSE, planar_coord = TRUE)
+k$knox
+```

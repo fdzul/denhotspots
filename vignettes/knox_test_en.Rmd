@@ -64,19 +64,45 @@ res$knox
 #> [1] 3875
 #> 
 #> $p_value
-#> [1] 0
+#> [1] 0.000999001
 #> 
 #> $RR
 #> [1] 1.148744
+#> 
+#> $expected
+#> [1] 3372.004
+#> 
+#> $RR_expected
+#> [1] 1.149168
+#> 
+#> $p_poisson
+#> [1] 1.318799e-17
+#> 
+#> $pairs
+#> [1] 1410360
+#> 
+#> $pairs_space
+#> [1] 14510
+#> 
+#> $pairs_time
+#> [1] 327756
 ```
 
 - `knox`: number of pairs of cases close in space and time (space-time
   links);
-- `p_value`: proportion of the permutations with at least as many pairs;
-- `RR`: ratio between the observed and the expected number of pairs.
+- `p_value`: Monte Carlo p-value, the proportion of the permutations of the
+  onsets (plus the observed one) with at least as many pairs;
+- `RR`: observed pairs divided by the mean of the permutations;
+- `expected`: expected pairs if space and time were independent,
+  `pairs_space * pairs_time / pairs` (Knox 1964);
+- `RR_expected`: observed pairs divided by `expected`;
+- `p_poisson`: Poisson mid-p-value, the one used by Tango (2010);
+- `pairs`, `pairs_space`, `pairs_time`: all the pairs of cases, and those
+  close in space and in time.
 
-A small `p_value` (and `RR` > 1) means space-time interaction: local
-transmission.
+A small p-value (and `RR` > 1) means space-time interaction: local
+transmission. The article [Knox test: validation with the data of
+Tango](knox_tango_en.html) checks these numbers against a published example.
 
 ## 3. Map of the transmission chains
 
@@ -114,11 +140,11 @@ ggplot() +
 The same map, interactive: click a case to see its date of onset, and use the
 layer control to show or hide each layer.
 
-```{r chains-data, include = FALSE}
+```{r chains-data, include = FALSE, eval = file.exists("knox-2024.rds")}
 res <- readRDS("knox-2024.rds")
 ```
 
-```{r chains-map, eval = requireNamespace("leaflet", quietly = TRUE)}
+```{r chains-map, eval = file.exists("knox-2024.rds") && requireNamespace("leaflet", quietly = TRUE)}
 library(leaflet)
 
 cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")
@@ -164,20 +190,21 @@ by_year <- lapply(2019:2024, function(y) {
     k <- knox_test(x = d, crs = "+proj=eqc", dt = 20, ds = 400, sym = 999,
                    sp_link = FALSE, planar_coord = FALSE)$knox
     data.frame(year = y, cases = nrow(d), links = k$knox,
-               RR = round(k$RR, 2), p_value = k$p_value)
+               expected = round(k$expected, 1), RR = round(k$RR, 2),
+               p_value = k$p_value, p_poisson = signif(k$p_poisson, 3))
 })
 do.call(rbind, by_year)
 ```
 
 
 ```
-#>   year cases links   RR p_value
-#> 1 2019  1413  2370 1.17       0
-#> 2 2020   414   318 1.40       0
-#> 3 2021   259   257 1.72       0
-#> 4 2022   597   624 1.33       0
-#> 5 2023  1139  1665 1.27       0
-#> 6 2024  1680  3875 1.15       0
+#>   year cases links expected   RR p_value p_poisson
+#> 1 2019  1413  2370   2035.3 1.17   0.001  2.37e-13
+#> 2 2020   414   318    227.3 1.40   0.001  6.69e-09
+#> 3 2021   259   257    150.1 1.72   0.001  1.17e-15
+#> 4 2022   597   624    469.7 1.33   0.001  5.97e-12
+#> 5 2023  1139  1665   1310.4 1.27   0.001  2.74e-21
+#> 6 2024  1680  3875   3372.0 1.15   0.001  1.32e-17
 ```
 
 ## References

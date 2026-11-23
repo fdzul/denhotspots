@@ -42,10 +42,12 @@
     <li><h6 class="dropdown-header" data-toc-skip>English</h6></li>
     <li><a class="dropdown-item" href="../articles/hotspots_analysis_en.html">Persistent transmission hotspots (Getis-Ord Gi*)</a></li>
     <li><a class="dropdown-item" href="../articles/knox_test_en.html">Space-time interaction: Knox test and transmission chains</a></li>
+    <li><a class="dropdown-item" href="../articles/knox_tango_en.html">Knox test: validation with the data of Tango</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Español</h6></li>
     <li><a class="dropdown-item" href="../articles/hotspots_analysis_es.html">Hotspots de transmisión persistente (Getis-Ord Gi*)</a></li>
     <li><a class="dropdown-item" href="../articles/knox_test_es.html">Interacción espacio-temporal: prueba de Knox y cadenas de transmisión</a></li>
+    <li><a class="dropdown-item" href="../articles/knox_tango_es.html">Prueba de Knox: validación con los datos de Tango</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -125,23 +127,57 @@ permutaciones.</p>
 <span><span class="co">#&gt; [1] 3875</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $p_value</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; [1] 0.000999001</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $RR</span></span>
-<span><span class="co">#&gt; [1] 1.148744</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.148744</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $expected</span></span>
+<span><span class="co">#&gt; [1] 3372.004</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $RR_expected</span></span>
+<span><span class="co">#&gt; [1] 1.149168</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $p_poisson</span></span>
+<span><span class="co">#&gt; [1] 1.318799e-17</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $pairs</span></span>
+<span><span class="co">#&gt; [1] 1410360</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $pairs_space</span></span>
+<span><span class="co">#&gt; [1] 14510</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $pairs_time</span></span>
+<span><span class="co">#&gt; [1] 327756</span></span></code></pre></div>
 <ul>
 <li>
 <code>knox</code>: número de pares de casos cercanos en espacio y
 tiempo (vínculos espacio-temporales);</li>
 <li>
-<code>p_value</code>: proporción de las permutaciones con al menos
+<code>p_value</code>: p de Monte Carlo, la proporción de las
+permutaciones de las fechas de inicio (más la observada) con al menos
 tantos pares;</li>
 <li>
-<code>RR</code>: razón entre el número de pares observado y el
-esperado.</li>
+<code>RR</code>: pares observados entre la media de las
+permutaciones;</li>
+<li>
+<code>expected</code>: pares esperados si espacio y tiempo fueran
+independientes, <code>pairs_space * pairs_time / pairs</code> (Knox
+1964);</li>
+<li>
+<code>RR_expected</code>: pares observados entre
+<code>expected</code>;</li>
+<li>
+<code>p_poisson</code>: p de Poisson <em>mid-p</em>, el que usa
+Tango (2010);</li>
+<li>
+<code>pairs</code>, <code>pairs_space</code>,
+<code>pairs_time</code>: todos los pares de casos, y los cercanos en
+espacio y en tiempo.</li>
 </ul>
-<p>Un <code>p_value</code> pequeño (y <code>RR</code> &gt; 1) indica
-interacción espacio-temporal: transmisión local.</p>
+<p>Un p pequeño (y <code>RR</code> &gt; 1) indica interacción
+espacio-temporal: transmisión local. El artículo <a href="knox_tango_es.html">Prueba de Knox: validación con los datos de
+Tango</a> compara estos números con un ejemplo publicado.</p>
 </div>
 <div class="section level2">
 <h2 id="mapa-de-las-cadenas-de-transmisión">3. Mapa de las cadenas de transmisión<a class="anchor" aria-label="anchor" href="#mapa-de-las-cadenas-de-transmisi%C3%B3n"></a>
@@ -219,16 +255,17 @@ la base geocodificada:</p>
 <span>    <span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/knox_test.html">knox_test</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">d</span>, crs <span class="op">=</span> <span class="st">"+proj=eqc"</span>, dt <span class="op">=</span> <span class="fl">20</span>, ds <span class="op">=</span> <span class="fl">400</span>, sym <span class="op">=</span> <span class="fl">999</span>,</span>
 <span>                   sp_link <span class="op">=</span> <span class="cn">FALSE</span>, planar_coord <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">knox</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>year <span class="op">=</span> <span class="va">y</span>, cases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>, links <span class="op">=</span> <span class="va">k</span><span class="op">$</span><span class="va">knox</span>,</span>
-<span>               RR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">k</span><span class="op">$</span><span class="va">RR</span>, <span class="fl">2</span><span class="op">)</span>, p_value <span class="op">=</span> <span class="va">k</span><span class="op">$</span><span class="va">p_value</span><span class="op">)</span></span>
+<span>               expected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">k</span><span class="op">$</span><span class="va">expected</span>, <span class="fl">1</span><span class="op">)</span>, RR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">k</span><span class="op">$</span><span class="va">RR</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>               p_value <span class="op">=</span> <span class="va">k</span><span class="op">$</span><span class="va">p_value</span>, p_poisson <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">k</span><span class="op">$</span><span class="va">p_poisson</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">by_year</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;   year cases links   RR p_value</span></span>
-<span><span class="co">#&gt; 1 2019  1413  2370 1.17       0</span></span>
-<span><span class="co">#&gt; 2 2020   414   318 1.40       0</span></span>
-<span><span class="co">#&gt; 3 2021   259   257 1.72       0</span></span>
-<span><span class="co">#&gt; 4 2022   597   624 1.33       0</span></span>
-<span><span class="co">#&gt; 5 2023  1139  1665 1.27       0</span></span>
-<span><span class="co">#&gt; 6 2024  1680  3875 1.15       0</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;   year cases links expected   RR p_value p_poisson</span></span>
+<span><span class="co">#&gt; 1 2019  1413  2370   2035.3 1.17   0.001  2.37e-13</span></span>
+<span><span class="co">#&gt; 2 2020   414   318    227.3 1.40   0.001  6.69e-09</span></span>
+<span><span class="co">#&gt; 3 2021   259   257    150.1 1.72   0.001  1.17e-15</span></span>
+<span><span class="co">#&gt; 4 2022   597   624    469.7 1.33   0.001  5.97e-12</span></span>
+<span><span class="co">#&gt; 5 2023  1139  1665   1310.4 1.27   0.001  2.74e-21</span></span>
+<span><span class="co">#&gt; 6 2024  1680  3875   3372.0 1.15   0.001  1.32e-17</span></span></code></pre>
 <p>En las seis temporadas simuladas hay interacción espacio-temporal (p
 &lt; 0.001); el RR es mayor en los años con pocos casos, cuando los
 casos que hay están más agrupados en cadenas.</p>

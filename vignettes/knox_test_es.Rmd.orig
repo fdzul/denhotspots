@@ -118,11 +118,11 @@ ggplot() +
 El mismo mapa, interactivo: da clic en un caso para ver su fecha de inicio de
 síntomas, y usa el control de capas para mostrar u ocultar cada capa.
 
-`r ''````{r chains-data, include = FALSE}
+`r ''````{r chains-data, include = FALSE, eval = file.exists("knox-2024.rds")}
 res <- readRDS("knox-2024.rds")
 ```
 
-`r ''````{r chains-map, eval = requireNamespace("leaflet", quietly = TRUE)}
+`r ''````{r chains-map, eval = file.exists("knox-2024.rds") && requireNamespace("leaflet", quietly = TRUE)}
 library(leaflet)
 
 cases <- sf::st_as_sf(res$x, coords = c("x", "y"), crs = "+proj=eqc")

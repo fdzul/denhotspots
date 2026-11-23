@@ -7,6 +7,8 @@ Simulated geocoded dengue cases to run the examples and articles.
 - [`sim_dengue`](https://fdzul.github.io/denhotspots/reference/sim_dengue.md)
   : Simulated geocoded dengue cases of the metropolitan area of
   Guadalajara
+- [`kaposi_uganda`](https://fdzul.github.io/denhotspots/reference/kaposi_uganda.md)
+  : Kaposi's sarcoma in the West Nile district of Uganda
 
 ## Data preparation
 
