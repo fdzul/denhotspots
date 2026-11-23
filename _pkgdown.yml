@@ -27,7 +27,7 @@ reference:
   - title: Space-time analysis
     desc: Knox test, space-time links, transmission chains and SaTScan.
     contents:
-      - knox
+      - knox_test
       - space_time_link_map
       - staticmap_knoxs
       - transmission_chains_map

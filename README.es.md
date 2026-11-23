@@ -43,6 +43,7 @@ del dengue y otras enfermedades transmitidas por *Aedes* en México.
 | Base de datos | Descripción | Fuente |
 |:---|:---|:---|
 | [`power_laws`](https://fdzul.github.io/denhotspots/reference/power_laws.html) | Theoretical power-law distributions | [link](https://www.tandfonline.com/doi/abs/10.1080/00207390802213609) |
+| [`sim_dengue`](https://fdzul.github.io/denhotspots/reference/sim_dengue.html) | Simulated geocoded dengue cases of the metropolitan area of Guadalajara | Simulated with `data-raw/sim_dengue.R`; population of Kontur (popmex::hdx_pop2023) and localities of INEGI 2019 (rgeomex). |
 
 Consulta la descripción completa de cada base con `?nombre`.
 
@@ -56,7 +57,7 @@ Consulta la descripción completa de cada base con `?nombre`.
 | [`geocoden()`](https://fdzul.github.io/denhotspots/reference/geocoden.html) | Geocode the addresses of the cases |
 | [`gihi()`](https://fdzul.github.io/denhotspots/reference/gihi.html) | Local spatial statistics Getis-Ord Gi\* and Hi by time period |
 | [`intensity_plot()`](https://fdzul.github.io/denhotspots/reference/intensity_plot.html) | Map of the intensity of cases |
-| [`knox()`](https://fdzul.github.io/denhotspots/reference/knox.html) | Knox test of space-time interaction |
+| [`knox_test()`](https://fdzul.github.io/denhotspots/reference/knox_test.html) | Knox test of space-time interaction |
 | [`map_risk()`](https://fdzul.github.io/denhotspots/reference/map_risk.html) | Map of the risk of transmission |
 | [`point_to_polygons()`](https://fdzul.github.io/denhotspots/reference/point_to_polygons.html) | Count the geocoded cases by spatial unit and time period |
 | [`power_law_plot()`](https://fdzul.github.io/denhotspots/reference/power_law_plot.html) | Plot of the power law of the hotspots |
@@ -66,7 +67,6 @@ Consulta la descripción completa de cada base con `?nombre`.
 | [`risk_h3()`](https://fdzul.github.io/denhotspots/reference/risk_h3.html) | Risk of transmission by H3 hexagon |
 | [`satscanR()`](https://fdzul.github.io/denhotspots/reference/satscanR.html) | Run the SaTScan space-time scan statistic |
 | [`save_geocoden()`](https://fdzul.github.io/denhotspots/reference/save_geocoden.html) | Save the geocoded dataset |
-| [`sf_joint_cov()`](https://fdzul.github.io/denhotspots/reference/sf_joint_cov.html) | Join the COVID-19 cases with the municipal polygons |
 | [`space_time_link_map()`](https://fdzul.github.io/denhotspots/reference/space_time_link_map.html) | Map of the space-time links of the Knox test |
 | [`spatial_lgcp()`](https://fdzul.github.io/denhotspots/reference/spatial_lgcp.html) | Spatial log-Gaussian Cox process model with INLA |
 | [`staticmap_intensity()`](https://fdzul.github.io/denhotspots/reference/staticmap_intensity.html) | Static map of the intensity of cases |
@@ -109,8 +109,8 @@ hotspots <- gihi(x = x, gi_hi = "gi", id = "CVEGEO", dis = "DENV",
                  time = "year", alpha = 0.95)
 
 # 3. interacción espacio-temporal con la prueba de Knox (20 días, 400 m)
-knox_res <- knox(x = cases_knox, crs = 4326, dt = 20, ds = 400, sym = 1000,
-                 sp_link = FALSE, planar_coord = FALSE)
+knox_res <- knox_test(x = cases_knox, crs = 4326, dt = 20, ds = 400, sym = 1000,
+                      sp_link = FALSE, planar_coord = FALSE)
 ```
 
 Hay ejemplos más completos en los

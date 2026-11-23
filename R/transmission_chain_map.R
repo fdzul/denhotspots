@@ -81,7 +81,7 @@ transmission_chains_map <-function(geocoded_dataset,
     }
 
     # Step 3. apply the knox test
-    knox_res <- denhotspots::knox(x = x,
+    knox_res <- knox_test(x = x,
                                   crs = "+proj=eqc",
                                   ds = 400, # distance in meters
                                   dt = 20,  # days 0 to 20 day

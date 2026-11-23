@@ -29,8 +29,8 @@
 #'      The coordinates should be projected to a planar system.
 #'      The function rknox test use the (knox)[https://github.com/thanhleviet/knox] package of (github)[https://github.com/].
 #'
-knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
-    rlang::check_installed(c("knox", "sp"), reason = "to use `knox()`.")
+knox_test <- function(x, crs, dt, ds, sym, sp_link, planar_coord){
+    rlang::check_installed(c("knox", "sp"), reason = "to use `knox_test()`.")
     # step 1. transform dataframe to sf object ####
     if(planar_coord == FALSE){
         x <- x |>
@@ -107,4 +107,16 @@ knox <- function(x, crs,dt, ds, sym, sp_link, planar_coord){
         return(my_list)
     }
     multi_return()
+}
+
+
+#' @rdname knox_test
+#' @param ... arguments passed to `knox_test()`.
+#' @details `knox()` is the former name of `knox_test()`; it still works but it
+#'   is deprecated, because it has the same name as the function of the knox
+#'   package.
+#' @export
+knox <- function(...) {
+    .Deprecated("knox_test", package = "denhotspots")
+    knox_test(...)
 }
